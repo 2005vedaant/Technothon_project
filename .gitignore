@@ -20,10 +20,6 @@ build/
 # Logs
 *.log
 
-# Environment secrets
-.env
-**/.env
-
 # Ultralytics cache
 *.cache
 
