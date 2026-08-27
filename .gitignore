@@ -1,0 +1,43 @@
+# Python virtual environments
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Node
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+
+# Environment secrets
+.env
+**/.env
+
+# Ultralytics cache
+*.cache
+
+# IDE
+.vscode/
+.idea/
+
+# Python generated files
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Dataset
+Dataset/
+dataset/
+*.zip

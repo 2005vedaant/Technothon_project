@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 120
+names: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'additional', 'alcohol', 'allergy', 'bacon', 'bad', 'bag', 'barbecue', 'bill', 'biscuit', 'bitter', 'bread', 'burger', 'bye', 'cake', 'cash', 'cheese', 'chicken', 'coke', 'cold', 'correct', 'cost', 'coupon', 'credit card', 'cup', 'dessert', 'don-t want', 'drink', 'drive', 'eat', 'eggs', 'enjoy', 'fine', 'forget', 'fork', 'french fries', 'fresh', 'go', 'hello', 'help', 'hot', 'icecream', 'ingredients', 'juicy', 'ketchup', 'lactose', 'lettuce', 'lid', 'like', 'manager', 'menu', 'milk', 'more', 'mustard', 'napkin', 'need', 'no', 'not', 'order', 'pepper', 'pickle', 'pizza', 'please', 'ready', 'receipt', 'refill', 'repeat', 'safe', 'salt', 'sandwich', 'sauce', 'small', 'soda', 'sorry', 'spicy', 'spoon', 'straw', 'sugar', 'sweet', 'thank-you', 'tissues', 'tomato', 'total', 'urgent', 'vegetables', 'wait', 'want', 'warm', 'water', 'what', 'would', 'wrong', 'yes', 'yoghurt', 'your']
+
+roboflow:
+  workspace: yolo11custom
+  project: sign-language-xpq5z-apvxj
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/yolo11custom/sign-language-xpq5z-apvxj/dataset/2

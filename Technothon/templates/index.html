@@ -1,0 +1,2746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Sign Language Translator</title>
+
+<!-- Three.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+
+    min-height: 100vh;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #172033,
+            #111827
+        );
+
+    color: white;
+
+    padding: 30px;
+
+}
+
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.container {
+
+    width: 100%;
+
+    max-width: 1100px;
+
+    margin: auto;
+
+    background:
+        rgba(255,255,255,0.08);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+    border-radius: 25px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 25px 60px
+        rgba(0,0,0,0.4);
+
+    backdrop-filter:
+        blur(15px);
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+
+    text-align: center;
+
+    margin-bottom: 25px;
+
+}
+
+.header h1 {
+
+    font-size: 34px;
+
+    margin-bottom: 8px;
+
+}
+
+.header p {
+
+    color: #cbd5e1;
+
+}
+
+
+/* =========================================================
+   CAMERA + AVATAR LAYOUT
+========================================================= */
+
+.visual-area {
+
+    display: grid;
+
+    grid-template-columns:
+        1.35fr
+        0.8fr;
+
+    gap: 20px;
+
+    align-items: stretch;
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+.camera-container {
+
+    width: 100%;
+
+    background: #000;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    border:
+        2px solid
+        rgba(255,255,255,0.15);
+
+}
+
+
+#cameraFeed {
+
+    width: 100%;
+
+    height: auto;
+
+    display: block;
+
+    background: #000;
+
+}
+
+
+.camera-label {
+
+    background:
+        rgba(0,0,0,0.8);
+
+    padding: 10px 15px;
+
+    font-size: 14px;
+
+    color: #e2e8f0;
+
+}
+
+
+.camera-error {
+
+    padding: 25px;
+
+    text-align: center;
+
+    color: #f87171;
+
+    background: #111827;
+
+}
+
+
+/* =========================================================
+   AVATAR CONTAINER
+========================================================= */
+
+.avatar-container {
+
+    position: relative;
+
+    min-height: 430px;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    border:
+        2px solid
+        rgba(255,255,255,0.15);
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #313a78 0%,
+            #151a3a 45%,
+            #080b19 100%
+        );
+
+}
+
+
+/* THREE.JS CANVAS */
+
+#avatarCanvas {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+}
+
+
+/* =========================================================
+   AVATAR LABEL
+========================================================= */
+
+.avatar-label {
+
+    position: absolute;
+
+    top: 12px;
+
+    left: 12px;
+
+    z-index: 5;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(0,0,0,0.45);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    backdrop-filter:
+        blur(10px);
+
+    font-size: 13px;
+
+    color: #e2e8f0;
+
+}
+
+
+/* =========================================================
+   SPEAKING INDICATOR
+========================================================= */
+
+.speaking-indicator {
+
+    position: absolute;
+
+    bottom: 15px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 5;
+
+    padding: 8px 15px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(0,0,0,0.5);
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    opacity: 0;
+
+    transition: 0.3s;
+
+}
+
+
+.speaking-indicator.active {
+
+    opacity: 1;
+
+    color: #67e8f9;
+
+    box-shadow:
+        0 0 20px
+        rgba(0,234,255,0.25);
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 15px;
+
+    color: #cbd5e1;
+
+}
+
+
+.status-dot {
+
+    width: 10px;
+
+    height: 10px;
+
+    background: #22c55e;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 10px
+        #22c55e;
+
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+
+    margin-top: 25px;
+
+}
+
+
+.section-title {
+
+    margin-bottom: 10px;
+
+    color: #cbd5e1;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+}
+
+
+/* =========================================================
+   SENTENCE BOX
+========================================================= */
+
+.sentence-box {
+
+    width: 100%;
+
+    min-height: 85px;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,0.25);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.15);
+
+    border-radius: 15px;
+
+    font-size: 24px;
+
+    line-height: 1.5;
+
+    word-wrap: break-word;
+
+}
+
+
+.placeholder {
+
+    color: #64748b;
+
+    font-size: 18px;
+
+}
+
+
+/* =========================================================
+   LANGUAGE
+========================================================= */
+
+select {
+
+    width: 100%;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.2);
+
+    background: #1e293b;
+
+    color: white;
+
+    font-size: 16px;
+
+    outline: none;
+
+    cursor: pointer;
+
+}
+
+
+select option {
+
+    background: #1e293b;
+
+    color: white;
+
+}
+
+
+/* =========================================================
+   TRANSLATED BOX
+========================================================= */
+
+.translated-box {
+
+    width: 100%;
+
+    min-height: 80px;
+
+    padding: 20px;
+
+    background:
+        rgba(124,58,237,0.15);
+
+    border:
+        1px solid
+        rgba(124,58,237,0.4);
+
+    border-radius: 15px;
+
+    font-size: 23px;
+
+    line-height: 1.5;
+
+    word-wrap: break-word;
+
+}
+
+
+.placeholder2 {
+
+    color: #94a3b8;
+
+    font-size: 17px;
+
+}
+
+
+.loading {
+
+    color: #a78bfa;
+
+}
+
+
+.audio-status {
+
+    margin-top: 10px;
+
+    color: #94a3b8;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.buttons {
+
+    display: flex;
+
+    gap: 12px;
+
+    margin-top: 20px;
+
+}
+
+
+button {
+
+    flex: 1;
+
+    border: none;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s,
+        opacity 0.2s;
+
+}
+
+
+button:hover {
+
+    transform:
+        translateY(-2px);
+
+    opacity: 0.9;
+
+}
+
+
+button:active {
+
+    transform:
+        translateY(0);
+
+}
+
+
+button:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+.translate-button {
+
+    background:
+        #7c3aed;
+
+}
+
+
+.speak-button {
+
+    background:
+        #2563eb;
+
+}
+
+
+.done-button {
+
+    background:
+        #16a34a;
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:800px) {
+
+    body {
+
+        padding: 15px;
+
+    }
+
+
+    .container {
+
+        padding: 18px;
+
+    }
+
+
+    .visual-area {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .avatar-container {
+
+        min-height: 380px;
+
+    }
+
+
+    .header h1 {
+
+        font-size: 27px;
+
+    }
+
+
+    .sentence-box {
+
+        font-size: 20px;
+
+    }
+
+
+    .translated-box {
+
+        font-size: 20px;
+
+    }
+
+
+    .buttons {
+
+        flex-direction: column;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+    <div class="header">
+
+        <h1>
+            🤟 Sign Language Translator
+        </h1>
+
+        <p>
+            Real-time sign language recognition
+            and Indian language translation
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         CAMERA + AVATAR
+    ===================================================== -->
+
+    <div class="visual-area">
+
+
+        <!-- CAMERA -->
+
+        <div class="camera-container">
+
+            <img
+                id="cameraFeed"
+                src="/video"
+                alt="Live Webcam"
+            >
+
+
+            <div
+                class="camera-error"
+                id="cameraError"
+                style="display:none;"
+            >
+
+                ❌ Camera stream unavailable.
+
+                <br><br>
+
+                Check that your webcam is not being
+                used by another application.
+
+            </div>
+
+
+            <div class="camera-label">
+
+                📷 LIVE CAMERA • SIGN LANGUAGE DETECTION
+
+            </div>
+
+        </div>
+
+
+        <!-- AVATAR -->
+
+        <div class="avatar-container">
+
+            <div class="avatar-label">
+
+                🤖 AI TRANSLATOR
+
+            </div>
+
+
+            <canvas
+                id="avatarCanvas"
+            ></canvas>
+
+
+            <div
+                class="speaking-indicator"
+                id="speakingIndicator"
+            >
+
+                🔊 Speaking...
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         STATUS
+    ===================================================== -->
+
+    <div class="status">
+
+        <div class="status-dot"></div>
+
+        <span>
+            Sign language detection active
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         DETECTED SENTENCE
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-title">
+
+            Detected Sentence
+
+        </div>
+
+
+        <div
+            class="sentence-box"
+            id="sentenceBox"
+        >
+
+            <span class="placeholder">
+
+                Start making signs...
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         LANGUAGE
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-title">
+
+            Translate To
+
+        </div>
+
+
+        <select id="targetLanguage">
+
+            <option value="hi">
+                🇮🇳 Hindi
+            </option>
+
+            <option value="bn">
+                🇮🇳 Bengali
+            </option>
+
+            <option value="te">
+                🇮🇳 Telugu
+            </option>
+
+            <option value="ta">
+                🇮🇳 Tamil
+            </option>
+
+            <option value="mr">
+                🇮🇳 Marathi
+            </option>
+
+            <option value="gu">
+                🇮🇳 Gujarati
+            </option>
+
+            <option value="kn">
+                🇮🇳 Kannada
+            </option>
+
+            <option value="ml">
+                🇮🇳 Malayalam
+            </option>
+
+            <option value="pa">
+                🇮🇳 Punjabi
+            </option>
+
+            <option value="ur">
+                🇮🇳 Urdu
+            </option>
+
+            <option value="en">
+                🇬🇧 English
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- =====================================================
+         TRANSLATED TEXT
+    ===================================================== -->
+
+    <div class="section">
+
+        <div class="section-title">
+
+            Translated Sentence
+
+        </div>
+
+
+        <div
+            class="translated-box"
+            id="translatedText"
+        >
+
+            <span class="placeholder2">
+
+                Translation will appear here...
+
+            </span>
+
+        </div>
+
+
+        <div
+            class="audio-status"
+            id="audioStatus"
+        ></div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BUTTONS
+    ===================================================== -->
+
+    <div class="buttons">
+
+        <button
+            class="translate-button"
+            id="translateButton"
+        >
+
+            🌐 Translate
+
+        </button>
+
+
+        <button
+            class="speak-button"
+            id="speakButton"
+        >
+
+            🔊 Speak
+
+        </button>
+
+
+        <button
+            class="done-button"
+            id="doneButton"
+        >
+
+            ✓ Done
+
+        </button>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+/* ==========================================================
+   THREE.JS HUMAN-LIKE AVATAR
+========================================================== */
+
+const canvas =
+    document.getElementById(
+        "avatarCanvas"
+    );
+
+
+const avatarContainer =
+    document.querySelector(
+        ".avatar-container"
+    );
+
+
+/* ==========================================================
+   SCENE
+========================================================== */
+
+const scene =
+    new THREE.Scene();
+
+
+/* ==========================================================
+   CAMERA
+========================================================== */
+
+const avatarCamera =
+    new THREE.PerspectiveCamera(
+        35,
+        1,
+        0.1,
+        100
+    );
+
+
+avatarCamera.position.set(
+    0,
+    1.25,
+    5.5
+);
+
+
+/* ==========================================================
+   RENDERER
+========================================================== */
+
+const renderer =
+    new THREE.WebGLRenderer({
+
+        canvas: canvas,
+
+        antialias: true,
+
+        alpha: true
+
+    });
+
+
+renderer.setPixelRatio(
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
+);
+
+
+/* ==========================================================
+   LIGHTING
+========================================================== */
+
+const ambientLight =
+    new THREE.AmbientLight(
+        0xffffff,
+        1.2
+    );
+
+scene.add(
+    ambientLight
+);
+
+
+const keyLight =
+    new THREE.DirectionalLight(
+        0xffffff,
+        2.2
+    );
+
+keyLight.position.set(
+    3,
+    5,
+    5
+);
+
+scene.add(
+    keyLight
+);
+
+
+const fillLight =
+    new THREE.DirectionalLight(
+        0xaabbff,
+        0.8
+    );
+
+fillLight.position.set(
+    -4,
+    2,
+    3
+);
+
+scene.add(
+    fillLight
+);
+
+
+/* ==========================================================
+   AVATAR GROUP
+========================================================== */
+
+const avatar =
+    new THREE.Group();
+
+
+avatar.position.y =
+    -1.15;
+
+
+scene.add(
+    avatar
+);
+
+
+/* ==========================================================
+   MATERIALS
+========================================================== */
+
+const skinMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xd79a79,
+
+        roughness: 0.65,
+
+        metalness: 0
+
+    });
+
+
+const darkerSkinMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xc88969,
+
+        roughness: 0.72
+
+    });
+
+
+const hairMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x161419,
+
+        roughness: 0.85
+
+    });
+
+
+const shirtMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x39427a,
+
+        roughness: 0.6
+
+    });
+
+
+const eyeMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xfffdf8,
+
+        roughness: 0.25
+
+    });
+
+
+const irisMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x3b2418,
+
+        roughness: 0.2
+
+    });
+
+
+const lipMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x9d5d59,
+
+        roughness: 0.55
+
+    });
+
+
+const mouthMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x431d27,
+
+        roughness: 0.45
+
+    });
+
+
+/* ==========================================================
+   HELPER
+========================================================== */
+
+function sphere(
+    x,
+    y,
+    z,
+    sx,
+    sy,
+    sz,
+    radius,
+    material
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                radius,
+                48,
+                32
+            ),
+
+            material
+
+        );
+
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+
+    mesh.scale.set(
+        sx,
+        sy,
+        sz
+    );
+
+
+    avatar.add(
+        mesh
+    );
+
+
+    return mesh;
+
+}
+
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+const body =
+    new THREE.Mesh(
+
+        new THREE.CapsuleGeometry(
+            0.72,
+            1.2,
+            12,
+            32
+        ),
+
+        shirtMaterial
+
+    );
+
+
+body.position.set(
+    0,
+    0.25,
+    0
+);
+
+avatar.add(
+    body
+);
+
+
+/* ==========================================================
+   NECK
+========================================================== */
+
+const neck =
+    new THREE.Mesh(
+
+        new THREE.CylinderGeometry(
+            0.19,
+            0.23,
+            0.4,
+            32
+        ),
+
+        skinMaterial
+
+    );
+
+
+neck.position.set(
+    0,
+    1.02,
+    0
+);
+
+avatar.add(
+    neck
+);
+
+
+/* ==========================================================
+   HEAD
+========================================================== */
+
+const head =
+    sphere(
+        0,
+        1.68,
+        0,
+        0.82,
+        0.96,
+        0.82,
+        0.72,
+        skinMaterial
+    );
+
+
+/* ==========================================================
+   EARS
+========================================================== */
+
+sphere(
+    -0.68,
+    1.72,
+    0,
+    0.65,
+    1,
+    0.7,
+    0.15,
+    darkerSkinMaterial
+);
+
+
+sphere(
+    0.68,
+    1.72,
+    0,
+    0.65,
+    1,
+    0.7,
+    0.15,
+    darkerSkinMaterial
+);
+
+
+/* ==========================================================
+   HAIR
+========================================================== */
+
+sphere(
+    0,
+    2.19,
+    -0.02,
+    1.02,
+    0.68,
+    0.95,
+    0.72,
+    hairMaterial
+);
+
+
+sphere(
+    0,
+    2.12,
+    0.52,
+    0.85,
+    0.4,
+    0.35,
+    0.7,
+    hairMaterial
+);
+
+
+sphere(
+    -0.52,
+    2.02,
+    0.1,
+    0.4,
+    0.7,
+    0.4,
+    0.5,
+    hairMaterial
+);
+
+
+sphere(
+    0.52,
+    2.02,
+    0.1,
+    0.4,
+    0.7,
+    0.4,
+    0.5,
+    hairMaterial
+);
+
+
+/* ==========================================================
+   EYES
+========================================================== */
+
+const leftEye =
+    sphere(
+        -0.205,
+        1.95,
+        0.68,
+        1,
+        0.72,
+        0.55,
+        0.115,
+        eyeMaterial
+    );
+
+
+const rightEye =
+    sphere(
+        0.205,
+        1.95,
+        0.68,
+        1,
+        0.72,
+        0.55,
+        0.115,
+        eyeMaterial
+    );
+
+
+/* ==========================================================
+   IRIS
+========================================================== */
+
+const leftIris =
+    sphere(
+        -0.205,
+        1.95,
+        0.765,
+        1,
+        1,
+        0.35,
+        0.058,
+        irisMaterial
+    );
+
+
+const rightIris =
+    sphere(
+        0.205,
+        1.95,
+        0.765,
+        1,
+        1,
+        0.35,
+        0.058,
+        irisMaterial
+    );
+
+
+/* ==========================================================
+   EYEBROWS
+========================================================== */
+
+const eyebrowMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x38251f,
+
+        roughness: 0.9
+
+    });
+
+
+const leftBrow =
+    sphere(
+        -0.205,
+        2.075,
+        0.665,
+        1,
+        0.25,
+        0.25,
+        0.16,
+        eyebrowMaterial
+    );
+
+
+leftBrow.rotation.z =
+    0.08;
+
+
+const rightBrow =
+    sphere(
+        0.205,
+        2.075,
+        0.665,
+        1,
+        0.25,
+        0.25,
+        0.16,
+        eyebrowMaterial
+    );
+
+
+rightBrow.rotation.z =
+    -0.08;
+
+
+/* ==========================================================
+   NOSE
+========================================================== */
+
+sphere(
+    0,
+    1.78,
+    0.69,
+    0.8,
+    1.6,
+    0.7,
+    0.09,
+    darkerSkinMaterial
+);
+
+
+sphere(
+    0,
+    1.66,
+    0.75,
+    1.2,
+    0.8,
+    0.8,
+    0.075,
+    darkerSkinMaterial
+);
+
+
+/* ==========================================================
+   CHEEKS
+========================================================== */
+
+sphere(
+    -0.38,
+    1.68,
+    0.62,
+    1.2,
+    0.7,
+    0.35,
+    0.15,
+    skinMaterial
+);
+
+
+sphere(
+    0.38,
+    1.68,
+    0.62,
+    1.2,
+    0.7,
+    0.35,
+    0.15,
+    skinMaterial
+);
+
+
+/* ==========================================================
+   MOUTH
+========================================================== */
+
+const upperLip =
+    sphere(
+        0,
+        1.49,
+        0.715,
+        1.15,
+        0.35,
+        0.35,
+        0.095,
+        lipMaterial
+    );
+
+
+const mouth =
+    sphere(
+        0,
+        1.445,
+        0.73,
+        1,
+        0.6,
+        0.25,
+        0.105,
+        mouthMaterial
+    );
+
+
+const lowerLip =
+    sphere(
+        0,
+        1.405,
+        0.72,
+        1.05,
+        0.35,
+        0.25,
+        0.075,
+        lipMaterial
+    );
+
+
+/* ==========================================================
+   CHIN
+========================================================== */
+
+sphere(
+    0,
+    1.30,
+    0.56,
+    1.15,
+    0.55,
+    0.35,
+    0.16,
+    skinMaterial
+);
+
+
+/* ==========================================================
+   ARMS
+========================================================== */
+
+function createArm(
+    x,
+    rotation
+) {
+
+    const armGroup =
+        new THREE.Group();
+
+
+    armGroup.position.set(
+        x,
+        0.30,
+        0
+    );
+
+
+    armGroup.rotation.z =
+        rotation;
+
+
+    const arm =
+        new THREE.Mesh(
+
+            new THREE.CapsuleGeometry(
+                0.17,
+                0.85,
+                10,
+                24
+            ),
+
+            shirtMaterial
+
+        );
+
+
+    armGroup.add(
+        arm
+    );
+
+
+    const hand =
+        new THREE.Mesh(
+
+            new THREE.SphereGeometry(
+                0.19,
+                32,
+                32
+            ),
+
+            skinMaterial
+
+        );
+
+
+    hand.position.y =
+        -0.55;
+
+
+    armGroup.add(
+        hand
+    );
+
+
+    avatar.add(
+        armGroup
+    );
+
+}
+
+
+createArm(
+    -0.72,
+    -0.12
+);
+
+
+createArm(
+    0.72,
+    0.12
+);
+
+
+/* ==========================================================
+   LEGS
+========================================================== */
+
+const leftLeg =
+    new THREE.Mesh(
+
+        new THREE.CapsuleGeometry(
+            0.23,
+            0.75,
+            10,
+            24
+        ),
+
+        new THREE.MeshStandardMaterial({
+            color: 0x252940,
+            roughness: 0.65
+        })
+
+    );
+
+
+leftLeg.position.set(
+    -0.3,
+    -0.65,
+    0
+);
+
+avatar.add(
+    leftLeg
+);
+
+
+const rightLeg =
+    new THREE.Mesh(
+
+        new THREE.CapsuleGeometry(
+            0.23,
+            0.75,
+            10,
+            24
+        ),
+
+        new THREE.MeshStandardMaterial({
+            color: 0x252940,
+            roughness: 0.65
+        })
+
+    );
+
+
+rightLeg.position.set(
+    0.3,
+    -0.65,
+    0
+);
+
+avatar.add(
+    rightLeg
+);
+
+
+/* ==========================================================
+   RESIZE AVATAR
+========================================================== */
+
+function resizeAvatar() {
+
+    const width =
+        avatarContainer.clientWidth;
+
+    const height =
+        avatarContainer.clientHeight;
+
+
+    renderer.setSize(
+        width,
+        height,
+        false
+    );
+
+
+    avatarCamera.aspect =
+        width / height;
+
+
+    avatarCamera.updateProjectionMatrix();
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeAvatar
+);
+
+
+resizeAvatar();
+
+
+/* ==========================================================
+   MOUSE LOOK
+========================================================== */
+
+let mouseX = 0;
+
+let mouseY = 0;
+
+
+avatarContainer.addEventListener(
+    "mousemove",
+    function(event) {
+
+        const rect =
+            avatarContainer.getBoundingClientRect();
+
+
+        mouseX =
+            (
+                (event.clientX - rect.left)
+                / rect.width
+                - 0.5
+            );
+
+
+        mouseY =
+            (
+                (event.clientY - rect.top)
+                / rect.height
+                - 0.5
+            );
+
+    }
+);
+
+
+/* ==========================================================
+   AVATAR ANIMATION
+========================================================== */
+
+let speaking =
+    false;
+
+
+function animateAvatar() {
+
+    requestAnimationFrame(
+        animateAvatar
+    );
+
+
+    const time =
+        performance.now() * 0.001;
+
+
+    /* Floating */
+
+    avatar.position.y =
+        -1.15 +
+        Math.sin(time * 1.4) *
+        0.025;
+
+
+    /* Head movement */
+
+    avatar.rotation.y =
+        THREE.MathUtils.lerp(
+            avatar.rotation.y,
+            mouseX * 0.18,
+            0.05
+        );
+
+
+    avatar.rotation.x =
+        THREE.MathUtils.lerp(
+            avatar.rotation.x,
+            -mouseY * 0.08,
+            0.05
+        );
+
+
+    /* Eye movement */
+
+    leftEye.position.x =
+        -0.205 +
+        mouseX * 0.025;
+
+
+    rightEye.position.x =
+        0.205 +
+        mouseX * 0.025;
+
+
+    leftIris.position.x =
+        -0.205 +
+        mouseX * 0.025;
+
+
+    rightIris.position.x =
+        0.205 +
+        mouseX * 0.025;
+
+
+    leftEye.position.y =
+        1.95 -
+        mouseY * 0.02;
+
+
+    rightEye.position.y =
+        1.95 -
+        mouseY * 0.02;
+
+
+    leftIris.position.y =
+        1.95 -
+        mouseY * 0.02;
+
+
+    rightIris.position.y =
+        1.95 -
+        mouseY * 0.02;
+
+
+    /* =========================================
+       MOUTH MOVEMENT
+    ========================================= */
+
+    if (speaking) {
+
+        const movement =
+            Math.abs(
+                Math.sin(
+                    time * 12
+                )
+            );
+
+
+        mouth.scale.y =
+            0.6 +
+            movement * 0.9;
+
+
+        mouth.scale.x =
+            0.95 +
+            movement * 0.08;
+
+    }
+
+    else {
+
+        mouth.scale.y =
+            0.6;
+
+        mouth.scale.x =
+            1;
+
+    }
+
+
+    renderer.render(
+        scene,
+        avatarCamera
+    );
+
+}
+
+
+animateAvatar();
+
+
+/* ==========================================================
+   AVATAR SPEAKING CONTROL
+========================================================== */
+
+function setAvatarSpeaking(
+    state
+) {
+
+    speaking =
+        state;
+
+
+    const indicator =
+        document.getElementById(
+            "speakingIndicator"
+        );
+
+
+    if (state) {
+
+        indicator.classList.add(
+            "active"
+        );
+
+    }
+
+    else {
+
+        indicator.classList.remove(
+            "active"
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   SIGN LANGUAGE VARIABLES
+========================================================== */
+
+let sentence = [];
+
+let lastFrontendWord = "";
+
+let lastFrontendTime = 0;
+
+let isSpeaking = false;
+
+
+/* ==========================================================
+   GET DETECTED WORD
+========================================================== */
+
+async function getDetectedWord() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/word",
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            return;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const word =
+            data.word;
+
+
+        if (word) {
+
+            addWord(
+                word
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.log(
+            "Word polling error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   ADD WORD
+========================================================== */
+
+function addWord(
+    word
+) {
+
+    const now =
+        Date.now();
+
+
+    if (
+        word ===
+        lastFrontendWord
+        &&
+        now -
+        lastFrontendTime <
+        1800
+    ) {
+
+        return;
+
+    }
+
+
+    lastFrontendWord =
+        word;
+
+
+    lastFrontendTime =
+        now;
+
+
+    let formattedWord =
+        word;
+
+
+    if (
+        word ===
+        "thank-you"
+    ) {
+
+        formattedWord =
+            "thank you";
+
+    }
+
+
+    if (
+        word ===
+        "don-t want"
+    ) {
+
+        formattedWord =
+            "don't want";
+
+    }
+
+
+    if (
+        word ===
+        "icecream"
+    ) {
+
+        formattedWord =
+            "ice cream";
+
+    }
+
+
+    if (
+        word ===
+        "french fries"
+    ) {
+
+        formattedWord =
+            "french fries";
+
+    }
+
+
+    sentence.push(
+        formattedWord
+    );
+
+
+    updateSentence();
+
+}
+
+
+/* ==========================================================
+   UPDATE SENTENCE
+========================================================== */
+
+function updateSentence() {
+
+    const box =
+        document.getElementById(
+            "sentenceBox"
+        );
+
+
+    if (
+        sentence.length ===
+        0
+    ) {
+
+        box.innerHTML = `
+
+            <span class="placeholder">
+
+                Start making signs...
+
+            </span>
+
+        `;
+
+        return;
+
+    }
+
+
+    box.innerText =
+        sentence.join(
+            " "
+        );
+
+}
+
+
+/* ==========================================================
+   TRANSLATE
+========================================================== */
+
+async function translateSentence() {
+
+    if (
+        sentence.length ===
+        0
+    ) {
+
+        alert(
+            "Please create a sentence first."
+        );
+
+        return;
+
+    }
+
+
+    const text =
+        sentence.join(
+            " "
+        );
+
+
+    const target =
+        document
+            .getElementById(
+                "targetLanguage"
+            )
+            .value;
+
+
+    const translatedBox =
+        document
+            .getElementById(
+                "translatedText"
+            );
+
+
+    translatedBox.innerHTML = `
+
+        <span class="loading">
+
+            🌐 Translating...
+
+        </span>
+
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/translate",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            text:
+                                text,
+
+                            target:
+                                target
+
+                        })
+
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Translation failed"
+            );
+
+        }
+
+
+        translatedBox.innerText =
+            data.translated_text;
+
+    }
+
+    catch(error) {
+
+        console.error(
+            error
+        );
+
+
+        translatedBox.innerText =
+            "❌ Translation failed";
+
+
+        alert(
+            "Translation error: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   SPEAK TRANSLATION
+========================================================== */
+
+async function speakTranslation() {
+
+    const translatedBox =
+        document
+            .getElementById(
+                "translatedText"
+            );
+
+
+    const text =
+        translatedBox
+            .innerText
+            .trim();
+
+
+    if (
+        !text
+        ||
+        text ===
+        "Translation will appear here..."
+    ) {
+
+        alert(
+            "Please translate the sentence first."
+        );
+
+        return;
+
+    }
+
+
+    if (isSpeaking) {
+
+        return;
+
+    }
+
+
+    const target =
+        document
+            .getElementById(
+                "targetLanguage"
+            )
+            .value;
+
+
+    const status =
+        document
+            .getElementById(
+                "audioStatus"
+            );
+
+
+    const button =
+        document
+            .getElementById(
+                "speakButton"
+            );
+
+
+    try {
+
+        isSpeaking =
+            true;
+
+
+        button.innerText =
+            "⏳ Generating...";
+
+
+        button.disabled =
+            true;
+
+
+        status.innerText =
+            "🔊 Generating voice...";
+
+
+        /* =========================================
+           GET AUDIO FROM FLASK
+        ========================================= */
+
+        const response =
+            await fetch(
+                "/speak",
+                {
+
+                    method:
+                        "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            text:
+                                text,
+
+                            target:
+                                target
+
+                        })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            let errorText =
+                "Voice generation failed.";
+
+
+            try {
+
+                const error =
+                    await response.json();
+
+
+                errorText =
+                    error.error ||
+                    errorText;
+
+            }
+
+            catch(e) {}
+
+
+            throw new Error(
+                errorText
+            );
+
+        }
+
+
+        /* =========================================
+           RECEIVE AUDIO
+        ========================================= */
+
+        const audioBlob =
+            await response.blob();
+
+
+        const audioURL =
+            URL.createObjectURL(
+                audioBlob
+            );
+
+
+        const audio =
+            new Audio(
+                audioURL
+            );
+
+
+        /* =========================================
+           AVATAR START SPEAKING
+        ========================================= */
+
+        audio.onplay =
+            function() {
+
+                setAvatarSpeaking(
+                    true
+                );
+
+
+                status.innerText =
+                    "🔊 Avatar speaking...";
+
+            };
+
+
+        /* =========================================
+           AUDIO FINISHED
+        ========================================= */
+
+        audio.onended =
+            function() {
+
+                setAvatarSpeaking(
+                    false
+                );
+
+
+                URL.revokeObjectURL(
+                    audioURL
+                );
+
+
+                status.innerText =
+                    "";
+
+
+                button.innerText =
+                    "🔊 Speak";
+
+
+                button.disabled =
+                    false;
+
+
+                isSpeaking =
+                    false;
+
+            };
+
+
+        /* =========================================
+           AUDIO ERROR
+        ========================================= */
+
+        audio.onerror =
+            function() {
+
+                setAvatarSpeaking(
+                    false
+                );
+
+
+                URL.revokeObjectURL(
+                    audioURL
+                );
+
+
+                status.innerText =
+                    "❌ Audio playback failed";
+
+
+                button.innerText =
+                    "🔊 Speak";
+
+
+                button.disabled =
+                    false;
+
+
+                isSpeaking =
+                    false;
+
+            };
+
+
+        /* =========================================
+           PLAY AUDIO
+        ========================================= */
+
+        await audio.play();
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "TTS error:",
+            error
+        );
+
+
+        setAvatarSpeaking(
+            false
+        );
+
+
+        status.innerText =
+            "❌ Voice generation failed";
+
+
+        button.innerText =
+            "🔊 Speak";
+
+
+        button.disabled =
+            false;
+
+
+        isSpeaking =
+            false;
+
+
+        alert(
+            "TTS Error:\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* ==========================================================
+   DONE
+========================================================== */
+
+function doneSentence() {
+
+    sentence = [];
+
+    lastFrontendWord =
+        "";
+
+    lastFrontendTime =
+        0;
+
+
+    updateSentence();
+
+
+    document
+        .getElementById(
+            "translatedText"
+        )
+        .innerHTML = `
+
+            <span class="placeholder2">
+
+                Translation will appear here...
+
+            </span>
+
+        `;
+
+
+    document
+        .getElementById(
+            "audioStatus"
+        )
+        .innerText =
+            "";
+
+}
+
+
+/* ==========================================================
+   CAMERA ERROR
+========================================================== */
+
+document
+    .getElementById(
+        "cameraFeed"
+    )
+    .addEventListener(
+        "error",
+        function() {
+
+            document
+                .getElementById(
+                    "cameraError"
+                )
+                .style.display =
+                    "block";
+
+        }
+    );
+
+
+/* ==========================================================
+   BUTTON EVENTS
+========================================================== */
+
+document
+    .getElementById(
+        "translateButton"
+    )
+    .addEventListener(
+        "click",
+        translateSentence
+    );
+
+
+document
+    .getElementById(
+        "speakButton"
+    )
+    .addEventListener(
+        "click",
+        speakTranslation
+    );
+
+
+document
+    .getElementById(
+        "doneButton"
+    )
+    .addEventListener(
+        "click",
+        doneSentence
+    );
+
+
+/* ==========================================================
+   SIGN POLLING
+========================================================== */
+
+setInterval(
+    getDetectedWord,
+    300
+);
+
+</script>
+
+
+</body>
+
+</html>
