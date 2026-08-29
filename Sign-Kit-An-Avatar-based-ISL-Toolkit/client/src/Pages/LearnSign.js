@@ -113,8 +113,8 @@ function LearnSign() {
   let alphaButtons = [];
   for (let i = 0; i < 26; i++) {
     alphaButtons.push(
-        <div className='col-md-3'>
-            <button className='signs w-100' onClick={()=>{
+        <div className='col-md-3' key={`alpha-${i}`}>
+            <button className='signs w-100 py-2' onClick={()=>{
               if(ref.animations.length === 0){
                 alphabets[String.fromCharCode(i + 65)](ref);
               }
@@ -128,8 +128,8 @@ function LearnSign() {
   let wordButtons = [];
   for (let i = 0; i < words.wordList.length; i++) {
     wordButtons.push(
-        <div className='col-md-4'>
-            <button className='signs w-100' onClick={()=>{
+        <div className='col-md-6' key={`word-${i}`}>
+            <button className='signs w-100 py-2' onClick={()=>{
               if(ref.animations.length === 0){
                 words[words.wordList[i]](ref);
               }
@@ -141,59 +141,72 @@ function LearnSign() {
   }
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        <div className='col-md-3'>
-            <h1 className='heading'>
-              Alphabets
-            </h1>
-            <div className='row'>
-                {
-                    alphaButtons
-                }
+    <div className='container-fluid px-4 py-4 min-vh-100' style={{ background: 'var(--bg-deep)' }}>
+      <div className='row g-4'>
+        {/* Left Panel: Library */}
+        <div className='col-lg-3 col-md-4'>
+          <div className='workspace-sidebar d-flex flex-column h-100'>
+            <div className="d-flex align-items-center mb-4 border-bottom pb-3" style={{ borderColor: 'var(--border-glass) !important' }}>
+              <span className="badge rounded-circle p-2 me-2 shadow-sm d-flex align-items-center justify-content-center" style={{width: 32, height: 32, background: 'var(--accent-cyan)', color: 'var(--bg-deep)'}}>1</span>
+              <h5 className='fw-bold text-white m-0'>Library</h5>
             </div>
-            <h1 className='heading'>
-              Words
-            </h1>
-            <div className='row'>
-                {
-                    wordButtons
-                }
+            
+            <h6 className='fw-bold text-muted mb-3 mt-2 text-uppercase' style={{ letterSpacing: '0.05em', fontSize: '0.85rem' }}>Alphabets</h6>
+            <div className='row g-2 mb-4'>
+                {alphaButtons}
             </div>
+            
+            <hr className="my-3 opacity-25" style={{ borderColor: 'var(--border-glass)' }} />
+            
+            <h6 className='fw-bold text-muted mb-3 text-uppercase' style={{ letterSpacing: '0.05em', fontSize: '0.85rem' }}>Words</h6>
+            <div className='row g-2 overflow-auto custom-scrollbar pe-2' style={{ maxHeight: '40vh' }}>
+                {wordButtons}
+            </div>
+          </div>
         </div>
-        <div className='col-md-7'>
-          <div id='canvas'/>
+        
+        {/* Center: 3D Canvas (Result) */}
+        <div className='col-lg-6 col-md-5'>
+          <div className='canvas-container w-100 h-100 shadow-lg' id='canvas' style={{ position: 'relative' }}>
+            <div className="position-absolute top-0 start-0 m-3 z-index-1">
+              <div className="badge shadow-sm px-3 py-2 border" style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderColor: 'var(--border-glass)' }}>
+                <i className="fa fa-graduation-cap me-2 text-info"></i> Learning Environment
+              </div>
+            </div>
+            {/* ThreeJS mounts here */}
+          </div>
         </div>
-        <div className='col-md-2'>
-          <p className='bot-label'>
-            Select Avatar
-          </p>
-          <img src={xbotPic} className='bot-image col-md-11' onClick={()=>{setBot(xbot)}} alt='Avatar 1: XBOT'/>
-          <img src={ybotPic} className='bot-image col-md-11' onClick={()=>{setBot(ybot)}} alt='Avatar 2: YBOT'/>
-          <p className='label-style'>
-            Animation Speed: {Math.round(speed*100)/100}
-          </p>
-          <Slider
-            axis="x"
-            xmin={0.05}
-            xmax={0.50}
-            xstep={0.01}
-            x={speed}
-            onChange={({ x }) => setSpeed(x)}
-            className='w-100'
-          />
-          <p className='label-style'>
-            Pause time: {pause} ms
-          </p>
-          <Slider
-            axis="x"
-            xmin={0}
-            xmax={2000}
-            xstep={100}
-            x={pause}
-            onChange={({ x }) => setPause(x)}
-            className='w-100'
-          />
+        
+        {/* Right Panel: Settings */}
+        <div className='col-lg-3 col-md-3'>
+          <div className='workspace-sidebar d-flex flex-column h-100'>
+            <div className="d-flex align-items-center mb-4 border-bottom pb-3" style={{ borderColor: 'var(--border-glass) !important' }}>
+              <span className="badge rounded-circle p-2 me-2 shadow-sm d-flex align-items-center justify-content-center" style={{width: 32, height: 32, background: 'var(--accent-cyan)', color: 'var(--bg-deep)'}}>2</span>
+              <h5 className='fw-bold text-white m-0'>Settings</h5>
+            </div>
+            
+            <label className='label-style text-muted mb-2'>Avatar Selection</label>
+            <div className="row g-2 mb-4">
+              <div className="col-6">
+                <img src={xbotPic} className={`bot-image w-100 rounded border ${bot === xbot ? 'border-info shadow-sm opacity-100' : 'border-secondary opacity-50'}`} style={{cursor: 'pointer', transition: 'all 0.3s ease'}} onClick={() => setBot(xbot)} alt='XBOT' title="Select XBOT" />
+              </div>
+              <div className="col-6">
+                <img src={ybotPic} className={`bot-image w-100 rounded border ${bot === ybot ? 'border-info shadow-sm opacity-100' : 'border-secondary opacity-50'}`} style={{cursor: 'pointer', transition: 'all 0.3s ease'}} onClick={() => setBot(ybot)} alt='YBOT' title="Select YBOT" />
+              </div>
+            </div>
+            
+            <label className='label-style d-flex justify-content-between text-muted mb-2 mt-2'>
+              <span>Animation Speed</span>
+              <span className="fw-bold text-info">{Math.round(speed * 100) / 100}x</span>
+            </label>
+            <Slider axis="x" xmin={0.05} xmax={0.50} xstep={0.01} x={speed} onChange={({ x }) => setSpeed(x)} className='w-100 mb-4' />
+            
+            <label className='label-style d-flex justify-content-between text-muted mb-2'>
+              <span>Transition Pause</span>
+              <span className="fw-bold text-info">{pause}ms</span>
+            </label>
+            <Slider axis="x" xmin={0} xmax={2000} xstep={100} x={pause} onChange={({ x }) => setPause(x)} className='w-100 mb-2' />
+          </div>
         </div>
       </div>
     </div>

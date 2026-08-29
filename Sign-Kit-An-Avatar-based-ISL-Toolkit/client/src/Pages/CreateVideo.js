@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom'
-import { Row, Form, Col, Button } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import { baseURL } from "../Config/config";
 import SpeechRecognition, {
   useSpeechRecognition,
@@ -73,7 +73,6 @@ function CreateVideo() {
       .then((res) => {
         setVideoId(res.data.videoId)
         setShowModal(true)
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -81,206 +80,209 @@ function CreateVideo() {
   };
 
   return (
-    <div className="container d-flex flex-column align-items-center">
-      <div className="display-5 mt-5 px-2 text-center">Create a New Video!</div>
-      <div className="lead mb-5 px-2 text-center">
-        Fill this form and provide your content to create a video using ISL in a
-        few clicks!
+    <div className="container-fluid d-flex flex-column align-items-center px-0 min-vh-100 pb-5">
+      <div className="container-fluid text-white py-5 mb-5 position-relative overflow-hidden" style={{ background: '#020617' }}>
+        <div className="position-absolute rounded-circle opacity-10 blur-3xl" style={{ background: '#06B6D4', width: '300px', height: '300px', top: '-50%', right: '10%', filter: 'blur(80px)' }}></div>
+        <div className="container my-4 text-center position-relative z-index-1 fade-in-up">
+          <h1 className="display-4 fw-bold mb-3">Create a New Video</h1>
+          <p className="lead mx-auto text-muted" style={{ maxWidth: '800px' }}>
+            Provide your content below to generate a new Indian Sign Language translation video in seconds.
+          </p>
+        </div>
       </div>
 
-      <Row className="container">
-        <Form
-          noValidate
-          validated={validated}
-          onSubmit={handleSubmit}
-          className="d-flex flex-column justify-content-center align-items-center p-0"
-        >
-          <Form.Group controlId="title" as={Col} xs="12" md="7" className="my-3">
-            <Form.Label>Title of Video</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Title of Video"
-              value={video.title}
-              name="title"
-              onChange={handleInputChanges}
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">
-              Please enter a title.
-            </Form.Control.Feedback>
-          </Form.Group>
+      <div className="container fade-in-up" style={{ maxWidth: '900px', animationDelay: '0.1s' }}>
+        <div className="card-background p-4 p-md-5">
+          <Form
+            noValidate
+            validated={validated}
+            onSubmit={handleSubmit}
+          >
+            <div className="row g-4">
+              <div className="col-12 mb-2">
+                  <h4 className="fw-bold text-white mb-0 border-bottom border-secondary pb-3">1. Video Details</h4>
+              </div>
+              <Form.Group controlId="title" className="col-12">
+                <Form.Label className="label-style m-0 mb-2">Video Title</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="e.g. Introduction to Machine Learning"
+                  value={video.title}
+                  name="title"
+                  className="input-style"
+                  onChange={handleInputChanges}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter a title.
+                </Form.Control.Feedback>
+              </Form.Group>
 
-          <Form.Group controlId="desc" as={Col} xs="12" md="7" className="mx-0 px-0 my-3">
-            <Form.Label>Description of Video</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Description of Video"
-              name="desc"
-              onChange={handleInputChanges}
-              as="textarea"
-              rows={4}
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">
-              Please enter a description.
-            </Form.Control.Feedback>
-          </Form.Group>
+              <Form.Group controlId="desc" className="col-12">
+                <Form.Label className="label-style m-0 mb-2">Description</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Briefly describe what this video is about..."
+                  name="desc"
+                  onChange={handleInputChanges}
+                  as="textarea"
+                  rows={3}
+                  className="input-style"
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter a description.
+                </Form.Control.Feedback>
+              </Form.Group>
 
-          <Form.Group controlId="createdBy" as={Col} xs="12" md="7" className="my-3">
-            <Form.Label>Name of Creator</Form.Label>
-            <Form.Control
-              required
-              type="text"
-              placeholder="Name of Creator"
-              name="createdBy"
-              onChange={handleInputChanges}
-            />
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">
-              Please enter your name as the creator.
-            </Form.Control.Feedback>
-          </Form.Group>
+              <Form.Group controlId="createdBy" className="col-md-6">
+                <Form.Label className="label-style m-0 mb-2">Creator Name</Form.Label>
+                <Form.Control
+                  required
+                  type="text"
+                  placeholder="Your Name"
+                  name="createdBy"
+                  className="input-style"
+                  onChange={handleInputChanges}
+                />
+                <Form.Control.Feedback type="invalid">
+                  Please enter your name.
+                </Form.Control.Feedback>
+              </Form.Group>
 
-          <Form.Group controlId="type" as={Col} xs="12" md="7" className="my-3">
-            <Form.Label>Select the type of video</Form.Label>
-            <Form.Select
-              required
-              placeholder="Select a type"
-              value={video.type}
-              name="type"
-              onChange={handleInputChanges}
-            >
-              <option value="PUBLIC">Public - Your video will be visible to the entire communtiy</option>
-              <option value="PRIVATE">Private - Your video can be accessed by people with whom you share the video ID</option>
-            </Form.Select>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">
-              Please select a video type.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group controlId="mode" as={Col} xs="12" md="7" className="my-3">
-            <Form.Label>Select a mode to provide your content</Form.Label>
-            <Form.Select
-              required
-              placeholder="Select a mode"
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-            >
-              <option value="text">Type the text</option>
-              <option value="speech">Speak through mic</option>
-              <option value="file">Upload a text file</option>
-            </Form.Select>
-            <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">
-              Please select a mode.
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          {mode === "text" && (
-            <Form.Group controlId="text" as={Col} xs="12" md="7" className="my-3">
-              <Form.Label>Enter your content here</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Type your content here..."
-                name="content"
-                onChange={(e) => setText(e.target.value)}
-                as="textarea"
-                rows={8}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                Please type your content.
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-
-          {mode === "file" && (
-            <Form.Group controlId="formFile" as={Col} xs="12" md="7" className="my-3">
-              <Form.Label>Upload your text (.txt) file here</Form.Label>
-              <Form.Control
-                type="file"
-                accept=".txt"
-                onChange={(e) => setFile(e.target.files[0])}
-                required
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                Please upload a text file here.
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-
-          {mode === "speech" && (
-            <div className="col-md-7 d-flex flex-column justify-content-center my-3">
-              <div className="row d-flex justify-content-center">
-                <label className="mb-2">
-                  Speech Recognition: {listening ? "on" : "off"}
-                </label>
-                <button
-                  type="button"
-                  className="btn btn-primary col-md-3 mx-3"
-                  onClick={startListening}
+              <Form.Group controlId="type" className="col-md-6">
+                <Form.Label className="label-style m-0 mb-2">Visibility</Form.Label>
+                <Form.Select
+                  required
+                  value={video.type}
+                  name="type"
+                  className="input-style cursor-pointer"
+                  onChange={handleInputChanges}
                 >
-                  Mic On <i className="fa fa-microphone" />
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary col-md-3 mx-3"
-                  onClick={stopListening}
-                >
-                  Mic Off <i className="fa fa-microphone-slash" />
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary col-md-3 mx-3"
-                  onClick={resetTranscript}
-                >
-                  Clear
-                </button>
+                  <option value="PUBLIC">Public — Visible in the community feed</option>
+                  <option value="PRIVATE">Private — Unlisted, accessible via Video ID only</option>
+                </Form.Select>
+              </Form.Group>
+
+              <div className="col-12 mt-5 mb-2">
+                  <h4 className="fw-bold text-white mb-0 border-bottom border-secondary pb-3">2. Content Source</h4>
+              </div>
+
+              <Form.Group controlId="mode" className="col-12">
+                <Form.Label className="label-style m-0 mb-2">Select Input Mode</Form.Label>
+                <div className="d-flex flex-wrap gap-3 mb-4">
+                    {['text', 'speech', 'file'].map((m) => (
+                        <div 
+                            key={m}
+                            onClick={() => setMode(m)}
+                            className={`flex-fill text-center p-3 rounded-3 border cursor-pointer transition-all ${mode === m ? 'border-info bg-info bg-opacity-10 text-info shadow-sm' : 'border-secondary text-muted hover-bg-light'}`}
+                            style={{ cursor: 'pointer', background: 'rgba(15, 23, 42, 0.4)' }}
+                        >
+                            <i className={`fa fa-${m === 'text' ? 'keyboard-o' : m === 'speech' ? 'microphone' : 'file-text-o'} fs-4 mb-2 d-block`}></i>
+                            <span className="fw-semibold text-uppercase" style={{ fontSize: '0.8rem', letterSpacing: '0.05em' }}>{m}</span>
+                        </div>
+                    ))}
+                </div>
+              </Form.Group>
+
+              {mode === "text" && (
+                <Form.Group controlId="text" className="col-12 fade-in-up" style={{ animationDuration: '0.3s' }}>
+                  <Form.Label className="label-style m-0 mb-2">Enter Content</Form.Label>
+                  <Form.Control
+                    required
+                    type="text"
+                    placeholder="Type the exact English text to be translated..."
+                    name="content"
+                    onChange={(e) => setText(e.target.value)}
+                    as="textarea"
+                    rows={6}
+                    className="input-style"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please provide text content.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
+
+              {mode === "file" && (
+                <Form.Group controlId="formFile" className="col-12 fade-in-up" style={{ animationDuration: '0.3s' }}>
+                  <Form.Label className="label-style m-0 mb-2">Upload Text File (.txt)</Form.Label>
+                  <Form.Control
+                    type="file"
+                    accept=".txt"
+                    onChange={(e) => setFile(e.target.files[0])}
+                    required
+                    className="input-style"
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    Please upload a text file.
+                  </Form.Control.Feedback>
+                </Form.Group>
+              )}
+
+              {mode === "speech" && (
+                <div className="col-12 fade-in-up" style={{ animationDuration: '0.3s' }}>
+                  <div className="p-4 rounded-4 border border-secondary mb-4" style={{ background: 'rgba(15, 23, 42, 0.6)' }}>
+                    <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                      <div className="d-flex align-items-center bg-dark px-3 py-2 rounded-pill border border-secondary shadow-sm">
+                        <div className={`spinner-grow spinner-grow-sm me-2 ${listening ? 'text-danger' : 'text-secondary'}`} role="status"></div>
+                        <span className={`fw-bold text-uppercase ${listening ? 'text-danger' : 'text-secondary'}`} style={{ fontSize: '0.8rem', letterSpacing: '0.05em' }}>
+                            {listening ? "Recording..." : "Idle"}
+                        </span>
+                      </div>
+                      <div className="d-flex gap-2">
+                        <button type="button" className="btn btn-success fw-bold px-4" onClick={startListening} disabled={listening}>
+                          <i className="fa fa-microphone me-2" /> Start
+                        </button>
+                        <button type="button" className="btn btn-danger fw-bold px-4" onClick={stopListening} disabled={!listening}>
+                          <i className="fa fa-stop me-2" /> Stop
+                        </button>
+                        <button type="button" className="btn btn-outline-secondary px-3" onClick={resetTranscript}>
+                          Clear
+                        </button>
+                      </div>
+                    </div>
+
+                    <Form.Group controlId="speech-text">
+                      <Form.Label className="label-style m-0 mb-2">Recognized Speech</Form.Label>
+                      <Form.Control
+                        required
+                        readOnly
+                        type="text"
+                        placeholder="Speak into your microphone..."
+                        name="content"
+                        value={transcript}
+                        as="textarea"
+                        rows={6}
+                        className="input-style"
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        Please provide speech input.
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </div>
+                </div>
+              )}
+              
+              <div className="col-12 mt-5">
+                <Button type="submit" className="btn btn-info btn-lg w-100 py-3 fw-bold rounded-pill shadow-lg hover-lift">
+                  Generate ISL Video <i className="fa fa-magic ms-2"></i>
+                </Button>
               </div>
             </div>
-          )}
-
-          {mode === "speech" && (
-            <Form.Group
-              controlId="speech-text"
-              as={Col}
-              xs="12"
-              md="7"
-              className="my-3"
-            >
-              <Form.Label>
-                Use the controls and speak through your mic
-              </Form.Label>
-              <Form.Control
-                required
-                readOnly
-                type="text"
-                placeholder="Your content will be displayed here..."
-                name="content"
-                value={transcript}
-                as="textarea"
-                rows={8}
-              />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-              <Form.Control.Feedback type="invalid">
-                Please speak through your mic.
-              </Form.Control.Feedback>
-            </Form.Group>
-          )}
-
-          <Button type="submit" className='mt-3'>Submit form</Button>
-        </Form>
-      </Row>
+          </Form>
+        </div>
+      </div>
 
       <ConfirmModal show={showModal} onHide={(e) => {
         setShowModal(false)
         navigate('/sign-kit/all-videos', { replace: true })
       }} videoId={videoId} />
+      
+      <style>{`
+        .hover-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.5) !important; }
+        .hover-bg-light:hover { background: rgba(30, 41, 59, 0.8) !important; border-color: rgba(148, 163, 184, 0.5) !important; }
+      `}</style>
     </div>
   );
 }

@@ -1,28 +1,53 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import Hero3D from "./Hero3D";
 
 function Masthead() {
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center home-gradient">
-      <div
-        className="row d-flex justify-content-center align-items-center"
-        style={{ flexDirection: "column" }}
-      >
-        <div className="col-lg-7 text-white font-weight-bold display-1 text-center">
-          Welcome to Sign Kit!
+    <div className="container-fluid d-flex justify-content-center align-items-center pt-5 position-relative" style={{ minHeight: 'calc(100vh - 76px)', overflow: 'hidden', background: 'var(--bg-deep)' }}>
+      
+      {/* Premium Ambient Lighting */}
+      <div className="ambient-bg">
+        <div className="ambient-glow-1"></div>
+        <div className="ambient-glow-2"></div>
+      </div>
+
+      {/* 3D Visual Centerpiece */}
+      <div className="position-absolute w-100 h-100 d-flex justify-content-center align-items-center" style={{ top: 0, zIndex: 0, opacity: 0.8 }}>
+        <div className="w-100 h-100 d-none d-lg-block position-absolute" style={{ right: '-15%' }}>
+            <Hero3D />
         </div>
-        <div className="col-lg-4 divider my-4" />
-        <div
-          className="col-lg-7 container text-white-50 lead text-center"
-          style={{ fontSize: "5rem !important" }}
-        >
-          The complete toolkit for Indian Sign Language. Explore our range of
-          features which have been carefully designed keeping in mind the
-          specific needs of people related to ISL.
+        <div className="w-100 h-100 d-block d-lg-none position-absolute opacity-50">
+            <Hero3D />
         </div>
-        <div className="d-flex justify-content-center mt-5">
-          <a className="btn btn-info btn-lg px-3" href="#intro">
-            Get Started <i className="fa fa-angle-down" />
-          </a>
+      </div>
+
+      <div className="row w-100 position-relative fade-in-up" style={{ maxWidth: "1300px", zIndex: 1, padding: '0 2rem' }}>
+        <div className="col-lg-7 text-start">
+          
+          <div className="d-inline-flex align-items-center px-3 py-2 rounded-pill mb-4 glass-panel" style={{ border: '1px solid rgba(0, 240, 255, 0.2)' }}>
+            <span className="badge rounded-circle bg-info p-1 me-2" style={{ width: 8, height: 8 }}></span>
+            <span className="text-info fw-bold" style={{ fontSize: '0.85rem', letterSpacing: '0.1em' }}>POWERED BY AI VISION</span>
+          </div>
+          
+          <h1 className="fw-bolder mb-4" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: 1.1, textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
+            <span className="text-white">Bridge the</span><br />
+            <span className="text-gradient">Communication Gap.</span>
+          </h1>
+          
+          <p className="normal-text mb-5" style={{ fontSize: "1.25rem", maxWidth: '600px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
+            Sign Kit is a premium, accessibility-first toolkit that translates spoken English into responsive 3D Indian Sign Language in real-time.
+          </p>
+          
+          <div className="d-flex gap-4 flex-wrap align-items-center">
+            <Link to="/sign-kit/convert" className="btn btn-info btn-lg px-5 py-3 rounded-pill text-dark shadow-lg">
+              Start Translating <i className="fa fa-arrow-right ms-2" />
+            </Link>
+            <a className="btn btn-outline-light btn-lg px-5 py-3 rounded-pill glass-panel text-decoration-none" href="#services">
+              Explore Platform
+            </a>
+          </div>
+          
         </div>
       </div>
     </div>

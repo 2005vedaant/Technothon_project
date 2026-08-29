@@ -7,26 +7,28 @@ import LearnSign from './Pages/LearnSign';
 import Video from './Pages/Video';
 import Navbar from './Components/Navbar';
 import CreateVideo from './Pages/CreateVideo';
-import Footer from './Components/Footer';
 import Videos from './Pages/Videos';
 import Feedback from './Pages/Feedback';
+import SignToText from './Pages/SignToText';
 
 function App() {
   return(
     <Router>
-      <div>
+      <div className="min-vh-100 d-flex flex-column" style={{ background: 'var(--bg-deep)' }}>
         <Navbar />
-        <Routes>
-          <Route exact path='/sign-kit/home' element={<Home />} />
-          <Route exact path='/sign-kit/convert' element={<Convert />} />
-          <Route exact path='/sign-kit/learn-sign' element={<LearnSign />} />
-          <Route exact path='/sign-kit/all-videos' element={<Videos />} />
-          <Route exact path='/sign-kit/video/:videoId' element={<Video />} />
-          <Route exact path='/sign-kit/create-video' element={<CreateVideo />} />
-          <Route exact path='/sign-kit/feedback' element={<Feedback />} />
-          <Route exact path='*' element={<Home/>} />
-        </Routes>
-        <Footer />
+        <div className="flex-grow-1">
+          <Routes>
+            <Route exact path='/sign-kit/home' element={<Home />} />
+            <Route exact path='/sign-kit/convert' element={<Convert />} />
+            <Route exact path='/sign-kit/learn-sign' element={<LearnSign />} />
+            <Route exact path='/sign-kit/all-videos' element={<Videos />} />
+            <Route exact path='/sign-kit/video/:videoId' element={<Video />} />
+            <Route exact path='/sign-kit/create-video' element={<CreateVideo />} />
+            <Route exact path='/sign-kit/feedback' element={<Feedback />} />
+            <Route exact path='/sign-kit/sign-to-text' element={<SignToText />} />
+            <Route exact path='*' element={<Home/>} />
+          </Routes>
+        </div>
       </div>
     </Router>
   )

@@ -170,71 +170,71 @@ function Video() {
   }
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        <div className='col-md-3'>
-          <label className='label-style'>
-              Video ID
-          </label>
-          <input ref={id} splaceholder='Video ID' className='w-100 input-style' />
-          <button onClick={animateFromID} className='btn btn-primary w-100 btn-style btn-start mb-3'>
-              Start Video
-          </button>
-          <hr />
-          {title && 
-            <div className='d-flex flex-column justify-content-center align-items-center mt-3'>
-            <label className='h3'>{title}</label>
-            <label>{desc}</label>
-            <div className='w-100'>
-              <label className='label-style mt-4'>
-                Processed Text
-              </label>
-              <textarea rows={10} value={text} className='w-100 input-style mt-2' readOnly />
-              </div>
-          </div>}
+    <div className='container-fluid px-4 py-3 bg-light min-vh-100'>
+      <div className='row g-3'>
+        {/* Left Panel */}
+        <div className='col-lg-3 col-md-4'>
+          <div className='workspace-sidebar d-flex flex-column'>
+            <h4 className='fw-bold text-dark mb-4 border-bottom pb-2'>Controls</h4>
+            <label className='label-style'>
+                Video ID
+            </label>
+            <input ref={id} placeholder='Enter Video ID' className='w-100 input-style mb-3' />
+            <button onClick={animateFromID} className='btn btn-info w-100 btn-style text-white fw-bold btn-start mb-3'>
+                Load Video
+            </button>
+            <hr className="my-3 opacity-25" />
+            
+            {title && 
+              <div className='d-flex flex-column mt-2'>
+              <h5 className='fw-bold text-primary mb-2'>{title}</h5>
+              <p className="text-secondary small mb-4">{desc}</p>
+              
+              <div className='w-100'>
+                <label className='label-style'>
+                  Processed Text
+                </label>
+                <textarea rows={10} value={text} className='w-100 input-style mt-2 bg-light text-secondary' readOnly />
+                </div>
+            </div>}
+          </div>
         </div>
-        <div className='col-md-7'>
-          <div id='canvas'/>
+        
+        {/* 3D Canvas */}
+        <div className='col-lg-7 col-md-5'>
+          <div className='canvas-container w-100 h-100' id='canvas'>
+            {/* ThreeJS mounts here */}
+          </div>
         </div>
-        <div className='col-md-2'>
-          <p className='bot-label'>
-            Select Avatar
-          </p>
-          <img src={xbotPic} className='bot-image col-md-11' onClick={()=>{setBot(xbot)}} alt='Avatar 1: XBOT'/>
-          <img src={ybotPic} className='bot-image col-md-11' onClick={()=>{setBot(ybot)}} alt='Avatar 2: YBOT'/>
-          <p className='label-style'>
-            Animation Speed: {Math.round(speed*100)/100}
-          </p>
-          <Slider
-            axis="x"
-            xmin={0.05}
-            xmax={0.50}
-            xstep={0.01}
-            x={speed}
-            onChange={({ x }) => setSpeed(x)}
-            className='w-100'
-          />
-          <p className='label-style'>
-            Pause time: {pause} ms
-          </p>
-          <Slider
-            axis="x"
-            xmin={0}
-            xmax={2000}
-            xstep={100}
-            x={pause}
-            onChange={({ x }) => setPause(x)}
-            className='w-100'
-          />
+        
+        {/* Right Panel */}
+        <div className='col-lg-2 col-md-3'>
+          <div className='workspace-sidebar d-flex flex-column'>
+            <h4 className='fw-bold text-dark mb-4 border-bottom pb-2'>Settings</h4>
+            
+            <p className='bot-label mb-2 text-start'>Select Avatar</p>
+            <div className="d-flex flex-column gap-3 mb-4">
+              <img src={xbotPic} className={`bot-image w-100 m-0 ${bot === xbot ? 'border-info shadow-sm' : ''}`} onClick={() => setBot(xbot)} alt='Avatar 1: XBOT' />
+              <img src={ybotPic} className={`bot-image w-100 m-0 ${bot === ybot ? 'border-info shadow-sm' : ''}`} onClick={() => setBot(ybot)} alt='Avatar 2: YBOT' />
+            </div>
+            
+            <hr className="my-3" />
+            
+            <p className='label-style'>Animation Speed: <span className="text-info">{Math.round(speed * 100) / 100}</span></p>
+            <Slider axis="x" xmin={0.05} xmax={0.50} xstep={0.01} x={speed} onChange={({ x }) => setSpeed(x)} className='w-100 mb-4' />
+            
+            <p className='label-style'>Pause time: <span className="text-info">{pause} ms</span></p>
+            <Slider axis="x" xmin={0} xmax={2000} xstep={100} x={pause} onChange={({ x }) => setPause(x)} className='w-100' />
+          </div>
         </div>
       </div>
-      <Modal show={invalidId} onHide={() => setInvalidId(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Invalid Video ID</Modal.Title>
+      <Modal show={invalidId} onHide={() => setInvalidId(false)} centered>
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="text-danger fw-bold">Invalid Video ID</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Please make sure that the video ID that your have entered is valid!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={() => setInvalidId(false)}>
+        <Modal.Body className="pt-2">Please make sure that the video ID you have entered is valid and exists.</Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="info" className="text-white fw-bold" onClick={() => setInvalidId(false)}>
             Close
           </Button>
         </Modal.Footer>

@@ -501,124 +501,153 @@ function Convert() {
   // ── Render ────────────────────────────────────────────────────────────────
   const statusBg = statusType === 'error' ? '#ffe0e0' : statusType === 'success' ? '#e0ffe8' : '#e8f4ff';
   const statusColor = statusType === 'error' ? '#a00' : statusType === 'success' ? '#060' : '#004';
+  const isError = statusType === 'error';
+  const isSuccess = statusType === 'success';
+  const statusIcon = isError ? 'fa-exclamation-circle' : isSuccess ? 'fa-check-circle' : 'fa-info-circle';
 
   return (
-    <div className='container-fluid'>
-      <div className='row'>
-        {/* ── Left panel ── */}
-        <div className='col-md-3'>
-
-          {/* Language selector */}
-          <label className='label-style'>Input Language</label>
-          <select
-            value={selectedLang}
-            onChange={e => setSelectedLang(e.target.value)}
-            className='w-100 input-style'
-            style={{ marginBottom: '8px', padding: '4px' }}
-          >
-            {SUPPORTED_LANGUAGES.map(l => (
-              <option key={l.code} value={l.code}>{l.label}</option>
-            ))}
-          </select>
-
-          {/* Status message */}
-          {status && (
-            <div style={{
-              background: statusBg, color: statusColor,
-              border: '1px solid', borderColor: statusColor,
-              borderRadius: 4, padding: '6px 10px', marginBottom: 8,
-              fontSize: 13, lineHeight: 1.4,
-            }}>
-              {status}
-            </div>
-          )}
-
-          {/* Detected language badge */}
-          {detectedLang && (
-            <div style={{ fontSize: 12, marginBottom: 6, color: '#555' }}>
-              Detected language: <strong>{detectedLang}</strong>
-            </div>
-          )}
-
-          {/* Processed ISL text */}
-          <label className='label-style'>Processed ISL Text</label>
-          <textarea rows={2} value={text} className='w-100 input-style' readOnly />
-
-          {/* English translation */}
-          {englishText && (
-            <>
-              <label className='label-style'>English Translation</label>
-              <textarea rows={2} value={englishText} className='w-100 input-style' readOnly />
-            </>
-          )}
-
-          {/* Voice recording controls */}
-          <label className='label-style'>
-            Voice Input — {isRecording ? '🔴 Recording' : '⚪ Idle'}
-          </label>
-          <div className='space-between' style={{ marginBottom: 8 }}>
-            <button
-              className="btn btn-success btn-style w-50"
-              onClick={startRecording}
-              disabled={isRecording}
-            >
-              <i className="fa fa-microphone" /> Record
-            </button>
-            <button
-              className="btn btn-danger btn-style w-50"
-              onClick={stopRecording}
-              disabled={!isRecording}
-            >
-              <i className="fa fa-stop" /> Stop & Transcribe
-            </button>
+    <div className='container-fluid px-4 py-4 min-vh-100' style={{ background: 'var(--bg-deep)' }}>
+      
+      {/* Top Status Banner */}
+      {status && (
+        <div className={`alert ${isError ? 'bg-danger' : isSuccess ? 'bg-success' : 'bg-primary'} shadow-sm border-0 d-flex align-items-center mb-4`} role="alert" style={{ borderRadius: '0.75rem', background: 'rgba(2, 132, 199, 0.2)' }}>
+          <i className={`fa ${statusIcon} fs-4 me-3 text-white`}></i>
+          <div>
+            <h6 className="mb-0 fw-bold text-white">{statusType.toUpperCase()}</h6>
+            <span className="small text-white opacity-75">{status}</span>
           </div>
+        </div>
+      )}
 
-          {/* Play English audio */}
-          <button
-            className="btn btn-info btn-style w-100"
-            onClick={playEnglishAudio}
-            disabled={ttsLoading || !englishText || !englishText.trim()}
-            style={{ marginBottom: 8 }}
-          >
-            {ttsLoading ? '🔊 Speaking…' : '▶ Play English Translation'}
-          </button>
+      <div className='row g-4'>
+        {/* Left panel: Input & Setup */}
+        <div className='col-xl-3 col-lg-4'>
+          <div className='workspace-sidebar d-flex flex-column h-100'>
+            <div className="d-flex align-items-center mb-4 border-bottom pb-3" style={{ borderColor: 'var(--border-glass) !important' }}>
+              <span className="badge rounded-circle p-2 me-2 shadow-sm d-flex align-items-center justify-content-center" style={{width: 32, height: 32, background: 'var(--accent-cyan)', color: 'var(--bg-deep)'}}>1</span>
+              <h5 className='fw-bold text-white m-0'>Input & Settings</h5>
+            </div>
+            
+            <label className='label-style text-muted mb-2'>Language</label>
+            <select
+              value={selectedLang}
+              onChange={e => setSelectedLang(e.target.value)}
+              className='input-style mb-4 fw-semibold text-white'
+            >
+              {SUPPORTED_LANGUAGES.map(l => (
+                <option key={l.code} value={l.code}>{l.label}</option>
+              ))}
+            </select>
 
-          {/* Text input section */}
-          <label className='label-style'>Text Input (English)</label>
-          <textarea rows={3} ref={textFromInput} placeholder='Type English text…' className='w-100 input-style' />
-          <button onClick={signFromInput} className='btn btn-primary w-100 btn-style btn-start'>
-            Start Animations
-          </button>
+            <label className='label-style text-muted mb-2'>
+              Voice Input
+            </label>
+            <div className='d-flex flex-column gap-2 mb-4'>
+              {isRecording ? (
+                <div className="p-3 rounded-3 text-center mb-2" style={{ background: 'rgba(225, 29, 72, 0.1)', border: '1px solid rgba(225, 29, 72, 0.3)' }}>
+                  <div className="spinner-grow spinner-grow-sm text-danger me-2" role="status"></div>
+                  <span className="text-danger fw-bold">Recording...</span>
+                </div>
+              ) : (
+                <div className="p-3 rounded-3 text-center mb-2" style={{ background: 'rgba(15, 23, 42, 0.5)', border: '1px solid var(--border-glass)' }}>
+                  <span className="text-muted fw-semibold"><i className="fa fa-microphone-slash me-2"></i>Microphone Idle</span>
+                </div>
+              )}
+              
+              <div className='d-flex gap-2'>
+                <button className="btn btn-success flex-fill fw-bold shadow-sm" onClick={startRecording} disabled={isRecording}>
+                  <i className="fa fa-microphone me-2" /> Start
+                </button>
+                <button className="btn btn-danger flex-fill fw-bold shadow-sm" onClick={stopRecording} disabled={!isRecording}>
+                  <i className="fa fa-stop me-2" /> Stop
+                </button>
+              </div>
+            </div>
 
-          {/* Debug toggle */}
-          <button
-            className="btn btn-outline-secondary w-100 btn-style"
-            style={{ marginTop: 8, fontSize: 12 }}
-            onClick={() => setShowDebug(v => !v)}
-          >
-            {showDebug ? '▲ Hide Debug' : '▼ Show Debug'}
-          </button>
-          {showDebug && (
-            <pre style={{ fontSize: 10, background: '#f4f4f4', padding: 6, borderRadius: 4, marginTop: 4, maxHeight: 200, overflow: 'auto' }}>
-              {JSON.stringify(debugInfo, null, 2)}
-            </pre>
-          )}
+            <label className='label-style text-muted mb-2'>Text Input</label>
+            <textarea rows={3} ref={textFromInput} placeholder='Type your message here...' className='input-style mb-3' style={{ resize: 'none' }} />
+            <button onClick={signFromInput} className='btn btn-primary fw-bold w-100 py-3 mb-4'>
+              <i className="fa fa-play me-2"></i> Translate to Sign Language
+            </button>
+
+            {/* Debug toggle */}
+            <div className="mt-auto pt-3 border-top" style={{ borderColor: 'var(--border-glass) !important' }}>
+              <button className="btn btn-sm text-muted w-100 text-start px-0 border-0 shadow-none bg-transparent" onClick={() => setShowDebug(v => !v)}>
+                <i className={`fa fa-chevron-${showDebug ? 'up' : 'down'} me-2`}></i> {showDebug ? 'Hide Developer Info' : 'Show Developer Info'}
+              </button>
+              {showDebug && (
+                <pre className="mt-2 p-3 rounded text-muted border" style={{ fontSize: '0.7rem', maxHeight: '150px', overflow: 'auto', background: 'rgba(15, 23, 42, 0.5)', borderColor: 'var(--border-glass)' }}>
+                  {JSON.stringify(debugInfo, null, 2)}
+                </pre>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* ── 3D Canvas ── */}
-        <div className='col-md-7'>
-          <div id='canvas' />
+        {/* Center: 3D Canvas (Result) */}
+        <div className='col-xl-6 col-lg-5'>
+          <div className='canvas-container w-100 h-100 shadow-lg' id='canvas' style={{ position: 'relative' }}>
+            <div className="position-absolute top-0 start-0 m-3 z-index-1">
+              <div className="badge shadow-sm px-3 py-2 border" style={{ background: 'var(--bg-card)', color: 'var(--text-main)', borderColor: 'var(--border-glass)' }}>
+                <i className="fa fa-video-camera me-2 text-info"></i> 3D Preview
+              </div>
+            </div>
+            {/* ThreeJS mounts here */}
+          </div>
         </div>
 
-        {/* ── Right panel ── */}
-        <div className='col-md-2'>
-          <p className='bot-label'>Select Avatar</p>
-          <img src={xbotPic} className='bot-image col-md-11' onClick={() => setBot(xbot)} alt='Avatar 1: XBOT' />
-          <img src={ybotPic} className='bot-image col-md-11' onClick={() => setBot(ybot)} alt='Avatar 2: YBOT' />
-          <p className='label-style'>Animation Speed: {Math.round(speed * 100) / 100}</p>
-          <Slider axis="x" xmin={0.05} xmax={0.50} xstep={0.01} x={speed} onChange={({ x }) => setSpeed(x)} className='w-100' />
-          <p className='label-style'>Pause time: {pause} ms</p>
-          <Slider axis="x" xmin={0} xmax={2000} xstep={100} x={pause} onChange={({ x }) => setPause(x)} className='w-100' />
+        {/* Right panel: Output & Avatar */}
+        <div className='col-xl-3 col-lg-3'>
+          <div className='workspace-sidebar d-flex flex-column h-100'>
+            <div className="d-flex align-items-center mb-4 border-bottom pb-3" style={{ borderColor: 'var(--border-glass) !important' }}>
+              <span className="badge rounded-circle p-2 me-2 shadow-sm d-flex align-items-center justify-content-center" style={{width: 32, height: 32, background: 'var(--accent-cyan)', color: 'var(--bg-deep)'}}>2</span>
+              <h5 className='fw-bold text-white m-0'>Result & Avatar</h5>
+            </div>
+            
+            <label className='label-style text-muted mb-2'>Detected / Processed Text</label>
+            <div className="p-3 rounded-3 border mb-4" style={{ background: 'rgba(15, 23, 42, 0.5)', borderColor: 'var(--border-glass)', minHeight: '80px' }}>
+              <p className="mb-0 text-white fw-semibold" style={{ minHeight: '40px' }}>
+                {text || <span className="text-muted fw-normal fst-italic">Waiting for input...</span>}
+              </p>
+              {detectedLang && <span className="badge bg-secondary mt-2">Detected: {detectedLang}</span>}
+            </div>
+
+            {englishText && englishText !== text && (
+              <div className="mb-4">
+                <label className='label-style text-muted mb-2'>English Translation</label>
+                <div className="p-3 rounded-3 border" style={{ background: 'rgba(15, 23, 42, 0.5)', borderColor: 'rgba(56, 189, 248, 0.5)' }}>
+                  <p className="mb-2 text-white">{englishText}</p>
+                  <button className="btn btn-sm btn-outline-info w-100 fw-bold" onClick={playEnglishAudio} disabled={ttsLoading}>
+                    <i className="fa fa-volume-up me-2" /> {ttsLoading ? 'Playing...' : 'Play Audio'}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <hr className="my-2 opacity-25" />
+            
+            <label className='label-style mt-2 text-muted mb-2'>Avatar Selection</label>
+            <div className="row g-2 mb-4">
+              <div className="col-6">
+                <img src={xbotPic} className={`bot-image w-100 rounded border ${bot === xbot ? 'border-info shadow-sm opacity-100' : 'border-secondary opacity-50'}`} style={{cursor: 'pointer', transition: 'all 0.3s ease'}} onClick={() => setBot(xbot)} alt='XBOT' title="Select XBOT" />
+              </div>
+              <div className="col-6">
+                <img src={ybotPic} className={`bot-image w-100 rounded border ${bot === ybot ? 'border-info shadow-sm opacity-100' : 'border-secondary opacity-50'}`} style={{cursor: 'pointer', transition: 'all 0.3s ease'}} onClick={() => setBot(ybot)} alt='YBOT' title="Select YBOT" />
+              </div>
+            </div>
+            
+            <label className='label-style d-flex justify-content-between text-muted mb-2'>
+              <span>Animation Speed</span>
+              <span className="fw-bold text-info">{Math.round(speed * 100) / 100}x</span>
+            </label>
+            <Slider axis="x" xmin={0.05} xmax={0.50} xstep={0.01} x={speed} onChange={({ x }) => setSpeed(x)} className='w-100 mb-4' />
+            
+            <label className='label-style d-flex justify-content-between text-muted mb-2'>
+              <span>Transition Pause</span>
+              <span className="fw-bold text-info">{pause}ms</span>
+            </label>
+            <Slider axis="x" xmin={0} xmax={2000} xstep={100} x={pause} onChange={({ x }) => setPause(x)} className='w-100 mb-2' />
+          </div>
         </div>
       </div>
     </div>
@@ -626,3 +655,5 @@ function Convert() {
 }
 
 export default Convert;
+
+

@@ -46,7 +46,7 @@ else:
     load_dotenv(override=True)
 
 # EXACT MODEL PATH AS REQUIRED (Using raw string to prevent escape sequence issues)
-MODEL_PATH = Path(r"C:\Users\Admin\OneDrive\Desktop\Technothon\techno_final_model\train-3\weights\best.pt")
+MODEL_PATH = BASE_DIR / "techno_final_model" / "train-3" / "weights" / "best.pt"
 
 if not MODEL_PATH.exists():
     raise FileNotFoundError(f"[MODEL ERROR] best.pt not found at: {MODEL_PATH}")
@@ -676,16 +676,19 @@ if __name__ == "__main__":
     print("   SIGN LANGUAGE TRANSLATOR - 120-CLASS ISL (best.pt)")
     print("=" * 55)
     print()
-    print("Backend Service:     http://127.0.0.1:5000")
-    print("Word Polling API:    http://127.0.0.1:5000/word")
-    print("Predict Endpoint:    http://127.0.0.1:5000/predict-sign")
-    print("Live Video Stream:   http://127.0.0.1:5000/video")
+    print("Backend Service:     http://127.0.0.1:8080")
+    print("Word Polling API:    http://127.0.0.1:8080/word")
+    print("Predict Endpoint:    http://127.0.0.1:8080/predict-sign")
+    print("Live Video Stream:   http://127.0.0.1:8080/video")
     print()
 
     app.run(
         host="0.0.0.0",
-        port=5000,
+        port=int(os.getenv('PORT', 8080)),
         debug=False,
         threaded=True,
         use_reloader=False
     )
+
+
+
