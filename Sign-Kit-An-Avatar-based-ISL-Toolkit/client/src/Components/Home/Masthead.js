@@ -31,18 +31,15 @@ function Masthead() {
           </div>
           
           <h1 className="fw-bolder mb-4" style={{ fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: 1.1, textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-            <span className="text-white">Bridge the</span><br />
-            <span className="text-gradient">Communication Gap.</span>
+            <span className="text-white">Your Digital Ally</span><br />
+            <span className="text-gradient">At Your Fingertips.</span>
           </h1>
           
-          <p className="normal-text mb-5" style={{ fontSize: "1.25rem", maxWidth: '600px', textShadow: '0 2px 10px rgba(0,0,0,0.5)' }}>
-            Sign Kit is a premium, accessibility-first toolkit that translates spoken English into responsive 3D Indian Sign Language in real-time.
+          <p className="mb-4 lead" style={{ color: '#CBD5E1', fontWeight: 500, textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
+            Translate Sign Language into Text & Speech—and Voice or Text into Signs with AI-powered two-way communication.
           </p>
           
           <div className="d-flex gap-4 flex-wrap align-items-center">
-            <Link to="/sign-kit/convert" className="btn btn-info btn-lg px-5 py-3 rounded-pill text-dark shadow-lg">
-              Start Translating <i className="fa fa-arrow-right ms-2" />
-            </Link>
             <a className="btn btn-outline-light btn-lg px-5 py-3 rounded-pill glass-panel text-decoration-none" href="#services">
               Explore Platform
             </a>

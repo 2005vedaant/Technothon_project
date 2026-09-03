@@ -1,37 +1,81 @@
-import './App.css'
-import React from "react";
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom'
-import Convert from './Pages/Convert';
-import Home from './Pages/Home';
-import LearnSign from './Pages/LearnSign';
-import Video from './Pages/Video';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './Components/ProtectedRoute';
+
+// Components & Pages
 import Navbar from './Components/Navbar';
-import CreateVideo from './Pages/CreateVideo';
-import Videos from './Pages/Videos';
-import Feedback from './Pages/Feedback';
+import Login from './Pages/Login';
+import CreateAccount from './Pages/CreateAccount';
+import Home from './Pages/Home';
+import Convert from './Pages/Convert';
 import SignToText from './Pages/SignToText';
+import LearnSign from './Pages/LearnSign';
+import Feedback from './Pages/Feedback';
 
 function App() {
-  return(
-    <Router>
-      <div className="min-vh-100 d-flex flex-column" style={{ background: 'var(--bg-deep)' }}>
-        <Navbar />
-        <div className="flex-grow-1">
-          <Routes>
-            <Route exact path='/sign-kit/home' element={<Home />} />
-            <Route exact path='/sign-kit/convert' element={<Convert />} />
-            <Route exact path='/sign-kit/learn-sign' element={<LearnSign />} />
-            <Route exact path='/sign-kit/all-videos' element={<Videos />} />
-            <Route exact path='/sign-kit/video/:videoId' element={<Video />} />
-            <Route exact path='/sign-kit/create-video' element={<CreateVideo />} />
-            <Route exact path='/sign-kit/feedback' element={<Feedback />} />
-            <Route exact path='/sign-kit/sign-to-text' element={<SignToText />} />
-            <Route exact path='*' element={<Home/>} />
-          </Routes>
-        </div>
-      </div>
-    </Router>
-  )
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<CreateAccount />} />
+
+          {/* Dedicated Protected Page Routes */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/convert"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Convert />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/sign-to-text"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <SignToText />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/learn"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <LearnSign />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/feedback"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Feedback />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Default Route Redirect */}
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="*" element={<Navigate to="/home" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
 }
 
 export default App;

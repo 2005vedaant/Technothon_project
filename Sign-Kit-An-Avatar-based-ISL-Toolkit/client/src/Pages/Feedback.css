@@ -1,0 +1,267 @@
+.feedback-page-wrapper {
+  min-height: calc(100vh - 70px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #1e293b 0%, #0b0f17 100%);
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+.feedback-card {
+  width: 100%;
+  max-width: 720px;
+  background: rgba(30, 41, 59, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+}
+
+.feedback-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.feedback-header h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #38bdf8;
+  letter-spacing: -0.5px;
+}
+
+.feedback-header .subtitle {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-top: 0.5rem;
+}
+
+.section-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rating-container {
+  margin-bottom: 2.5rem;
+}
+
+.rating-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+  gap: 1rem;
+}
+
+.rating-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem 0.5rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Neon Icon Container & Halo */
+.neon-icon-wrapper {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.neon-glow-halo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--neon-color);
+  opacity: 0.15;
+  filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.neon-face-svg {
+  width: 38px;
+  height: 38px;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.face-outline {
+  stroke: var(--neon-color);
+  filter: drop-shadow(0 0 2px var(--neon-color));
+  transition: all 0.3s ease;
+}
+
+.face-feature {
+  stroke: var(--neon-color);
+  filter: drop-shadow(0 0 2px var(--neon-color));
+  transition: all 0.3s ease;
+}
+
+.face-feature-fill {
+  fill: var(--neon-color);
+  filter: drop-shadow(0 0 2px var(--neon-color));
+  transition: all 0.3s ease;
+}
+
+.rating-btn .label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  transition: color 0.3s ease;
+}
+
+/* Color Theme Definitions for Each Neon Face */
+.rating-very-happy { --neon-color: #00f0ff; } /* Electric Cyan */
+.rating-happy { --neon-color: #00ff88; }      /* Neon Mint Green */
+.rating-neutral { --neon-color: #ffb700; }    /* Neon Amber/Gold */
+.rating-sad { --neon-color: #ff7700; }        /* Neon Coral Orange */
+.rating-very-sad { --neon-color: #ff0055; }   /* Neon Hot Magenta */
+
+/* Hover & Glowing State Animation */
+.rating-btn:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.rating-btn:hover .neon-glow-halo {
+  opacity: 0.6;
+  filter: blur(12px);
+  transform: scale(1.3);
+}
+
+.rating-btn:hover .face-outline,
+.rating-btn:hover .face-feature,
+.rating-btn:hover .face-feature-fill {
+  filter: drop-shadow(0 0 6px var(--neon-color)) drop-shadow(0 0 12px var(--neon-color));
+}
+
+.rating-btn:hover .label {
+  color: #ffffff;
+}
+
+/* Active Selected State */
+.rating-btn.active {
+  background: rgba(15, 23, 42, 0.95);
+  border-color: var(--neon-color);
+  box-shadow: 0 0 20px var(--neon-color-alpha, rgba(0, 240, 255, 0.35)), inset 0 0 10px rgba(255, 255, 255, 0.05);
+}
+
+.rating-btn.active .neon-glow-halo {
+  opacity: 0.9;
+  filter: blur(14px);
+  transform: scale(1.4);
+}
+
+.rating-btn.active .face-outline,
+.rating-btn.active .face-feature,
+.rating-btn.active .face-feature-fill {
+  filter: drop-shadow(0 0 8px var(--neon-color)) drop-shadow(0 0 18px var(--neon-color));
+}
+
+.rating-btn.active .label {
+  color: #ffffff;
+  text-shadow: 0 0 8px var(--neon-color);
+}
+
+.comments-container {
+  margin-bottom: 2rem;
+}
+
+.comments-container textarea {
+  width: 100%;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  resize: vertical;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease;
+}
+
+.comments-container textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.submit-feedback-btn {
+  width: 100%;
+  padding: 1rem;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.submit-feedback-btn:hover:not(:disabled) {
+  background: #0369a1;
+}
+
+.submit-feedback-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.feedback-success {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.success-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.feedback-success h2 {
+  font-size: 1.8rem;
+  color: #38bdf8;
+  margin-bottom: 0.5rem;
+}
+
+.feedback-success p {
+  color: #94a3b8;
+  margin-bottom: 1.5rem;
+}
+
+.reset-btn {
+  background: transparent;
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.reset-btn:hover {
+  background: rgba(56, 189, 248, 0.1);
+}

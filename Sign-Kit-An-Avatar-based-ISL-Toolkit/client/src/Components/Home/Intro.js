@@ -18,14 +18,17 @@ function Intro() {
                 <div className="d-inline-block mb-4">
                     <i className="fa fa-connectdevelop text-info" style={{ fontSize: '2.5rem', textShadow: 'var(--glow-cyan)' }}></i>
                 </div>
-                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>What is Sign Kit?</h2>
+                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>What is Mitra AI?</h2>
                 <div className="divider mx-auto mb-5" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} />
                 
                 <p className="normal-text mb-4 text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
                 Indian Sign Language (ISL) is a vital medium of communication for millions of individuals in India. However, the lack of widespread ISL literacy creates a significant communication gap in everyday life.
                 </p>
                 <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
-                <strong>Sign Kit</strong> aims to bridge this gap. Our platform provides an accessible, AI-powered toolkit to translate spoken or written English into 3D animated ISL, empowering everyone to communicate freely and learn seamlessly.
+                <strong>Mitra AI</strong> is a cutting-edge, accessibility-first toolkit that bridges this gap by translating spoken English into responsive 3D Indian Sign Language in real-time. It empowers users to communicate effectively, fostering inclusivity and understanding across diverse communities.
+                </p>
+                <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
+
                 </p>
             </div>
           </div>

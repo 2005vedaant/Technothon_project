@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Prevents the fixed navbar from overlapping top section content */
+}
 :root {
   --primary-navy: #0B1120;
   --primary-navy-light: #1E293B;

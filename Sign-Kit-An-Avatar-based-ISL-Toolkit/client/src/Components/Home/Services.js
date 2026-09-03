@@ -72,7 +72,7 @@ function Services() {
                             <p className="card-text text-muted flex-grow-1" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
                                 Real-time translation of spoken audio or English text into Indian Sign Language using our responsive 3D avatars.
                             </p>
-                            <Link to='/sign-kit/convert' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
+                            <Link to='/convert' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
                                 Try Translation
                             </Link>
                         </div>
@@ -89,7 +89,7 @@ function Services() {
                             <p className="card-text text-muted flex-grow-1" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
                                 Interactive modules for beginners to learn alphabets and basic words through 3D animations and visual feedback.
                             </p>
-                            <Link to='/sign-kit/learn-sign' className="btn btn-info w-100 mt-4 rounded-pill fw-bold text-dark">
+                            <Link to='/learn' className="btn btn-info w-100 mt-4 rounded-pill fw-bold text-dark">
                                 Start Learning
                             </Link>
                         </div>
@@ -97,17 +97,17 @@ function Services() {
 
                     {/* Feature 3 */}
                     <TiltCard delay="0.3s">
-                        <div className="position-absolute top-0 start-0 w-100 h-100 opacity-20 blur-xl" style={{ background: 'radial-gradient(circle at top right, rgba(139, 92, 246, 0.4), transparent 50%)', pointerEvents: 'none' }}></div>
+                        <div className="position-absolute top-0 start-0 w-100 h-100 opacity-20 blur-xl" style={{ background: 'radial-gradient(circle at top right, rgba(37, 99, 235, 0.4), transparent 50%)', pointerEvents: 'none' }}></div>
                         <div className="card-body p-5 d-flex flex-column position-relative z-index-1">
                             <div className="mb-4">
-                                <i className="fa fa-play-circle" style={{ fontSize: '3rem', color: 'var(--accent-violet)', textShadow: 'var(--glow-violet)' }}></i>
+                                <i className="fa fa-sign-language" style={{ fontSize: '3rem', color: 'var(--accent-blue)', textShadow: '0 0 20px rgba(37, 99, 235, 0.4)' }}></i>
                             </div>
-                            <h3 className="h4 fw-bold text-white mb-3">Video Community</h3>
+                            <h3 className="h4 fw-bold text-white mb-3">Sign to Text</h3>
                             <p className="card-text text-muted flex-grow-1" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
-                                Create and share ISL videos with the community. Convert your stories into sign language effortlessly.
+                                AI-powered real-time translation of Indian Sign Language gestures captured from your camera into readable text.
                             </p>
-                            <Link to='/sign-kit/all-videos' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
-                                Explore Videos
+                            <Link to='/sign-to-text' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
+                                Try Sign to Text
                             </Link>
                         </div>
                     </TiltCard>
