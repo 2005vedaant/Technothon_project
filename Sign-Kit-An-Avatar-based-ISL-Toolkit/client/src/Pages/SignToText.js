@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
 import AvatarCanvas from './AvatarCanvas.js';// Adjust path if placed in components
 
+const SUPPORTED_LANGUAGES = [
+  { code: 'hi-IN', name: 'Hindi (हिंदी)' },
+  { code: 'en-IN', name: 'English' },
+  { code: 'bn-IN', name: 'Bengali (বাংলা)' },
+  { code: 'te-IN', name: 'Telugu (తెలుగు)' },
+  { code: 'ta-IN', name: 'Tamil (தமிழ்)' },
+  { code: 'mr-IN', name: 'Marathi (मराठी)' },
+  { code: 'gu-IN', name: 'Gujarati (ગુજરાતી)' },
+  { code: 'kn-IN', name: 'Kannada (ಕನ್ನಡ)' },
+  { code: 'ml-IN', name: 'Malayalam (മലയാളം)' },
+  { code: 'or-IN', name: 'Odia (ଓଡ଼ିଆ)' },
+  { code: 'pa-IN', name: 'Punjabi (ਪੰਜਾਬੀ)' },
+  { code: 'as-IN', name: 'Assamese (অসমীয়া)' },
+  { code: 'ur-IN', name: 'Urdu (اردو)' }
+];
+
 function SignToText() {
   const [isTranslating, setIsTranslating] = useState(false);
   const [detectedText, setDetectedText] = useState('');
@@ -8,6 +24,8 @@ function SignToText() {
   const [status, setStatus] = useState('Idle');
 
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(SUPPORTED_LANGUAGES[0]);
+  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
 
   const handleStart = () => {
     setIsTranslating(true);
@@ -23,15 +41,18 @@ function SignToText() {
     setDetectedText('');
     setTranslatedSentence('');
   };
-// REPLACE YOUR EXISTING handleSpeak WITH THIS:
   const handleSpeak = () => {
     const textToSpeak = translatedSentence || detectedText;
     if (!textToSpeak) return;
 
+    window.speechSynthesis.cancel();
+
     const utterance = new SpeechSynthesisUtterance(textToSpeak);
+    utterance.lang = selectedLanguage.code;
     
-    setIsSpeaking(true);
+    utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
+    utterance.onerror = () => setIsSpeaking(false);
     
     window.speechSynthesis.speak(utterance);
   };
@@ -129,10 +150,49 @@ function SignToText() {
                     )}
                   </div>
 
-                  <div className="col-md-6">
-                    <button className="btn btn-outline-light w-100 py-2.5 fw-bold rounded-3">
-                      <i className="fa fa-globe me-2"></i> Languages
+                  <div className="col-md-6 position-relative">
+                    <button 
+                      onClick={() => setShowLanguageMenu(!showLanguageMenu)} 
+                      className="btn btn-outline-light w-100 py-2.5 fw-bold rounded-3 d-flex align-items-center justify-content-center gap-2"
+                    >
+                      <i className="fa fa-globe text-info"></i>
+                      <span>Languages ({selectedLanguage.name})</span>
+                      <i className={`fa fa-chevron-${showLanguageMenu ? 'up' : 'down'} small opacity-75 ms-1`}></i>
                     </button>
+
+                    {showLanguageMenu && (
+                      <div 
+                        className="position-absolute top-100 start-0 w-100 mt-2 p-2 rounded-3 glass-panel shadow-lg"
+                        style={{
+                          background: 'rgba(15, 23, 42, 0.95)',
+                          border: '1px solid rgba(0, 240, 255, 0.3)',
+                          maxHeight: '260px',
+                          overflowY: 'auto',
+                          zIndex: 1050
+                        }}
+                      >
+                        <div className="small fw-bold text-muted px-2 py-1 mb-1 text-uppercase">Select Target Language</div>
+                        {SUPPORTED_LANGUAGES.map((lang) => (
+                          <button
+                            key={lang.code}
+                            onClick={() => {
+                              setSelectedLanguage(lang);
+                              setShowLanguageMenu(false);
+                            }}
+                            className={`w-100 text-start btn btn-sm py-2 px-3 mb-1 rounded-2 d-flex align-items-center justify-content-between ${
+                              selectedLanguage.code === lang.code ? 'btn-info text-dark fw-bold' : 'btn-outline-dark text-light'
+                            }`}
+                            style={{
+                              border: selectedLanguage.code === lang.code ? 'none' : '1px solid rgba(255, 255, 255, 0.1)',
+                              background: selectedLanguage.code === lang.code ? 'var(--accent-cyan)' : 'rgba(5, 8, 17, 0.6)'
+                            }}
+                          >
+                            <span>{lang.name}</span>
+                            <span className="small opacity-75">({lang.code})</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -157,33 +217,29 @@ function SignToText() {
                   </div>
                 </div>
 
-               {/* Row 3: Taller & Narrower Speak / Clear Buttons + Avatar */}
-{/* Row 3: Taller & Narrower Speak / Clear Buttons + Avatar */}
-  <div className="row g-3">
-    {/* Left Column: Speak & Clear Buttons */}
-    <div className="col-md-4 d-flex flex-column gap-3">
-      <button 
-        onClick={handleSpeak} 
-        className="btn btn-outline-info w-100 py-5 fs-5 fw-bold rounded-3 shadow-sm"
-      >
-        <i className="fa fa-volume-up me-2"></i> Speak
-      </button>
-      <button 
-        onClick={handleClear} 
-        className="btn btn-outline-danger w-100 py-5 fs-5 fw-bold rounded-3 shadow-sm"
-      >
-        <i className="fa fa-trash me-2"></i> Clear
-      </button>
-    </div>
+                {/* Row 3: Speak / Clear Buttons + Avatar */}
+                <div className="row g-3">
+                  {/* Left Column: Speak & Clear Buttons */}
+                  <div className="col-md-4 d-flex flex-column gap-3">
+                    <button 
+                      onClick={handleSpeak} 
+                      className="btn btn-outline-info w-100 py-5 fs-5 fw-bold rounded-3 shadow-sm"
+                    >
+                      <i className="fa fa-volume-up me-2"></i> Speak
+                    </button>
+                    <button 
+                      onClick={handleClear} 
+                      className="btn btn-outline-danger w-100 py-5 fs-5 fw-bold rounded-3 shadow-sm"
+                    >
+                      <i className="fa fa-trash me-2"></i> Clear
+                    </button>
+                  </div>
 
-    {/* Right Column: 3D Avatar Area */}
-    <div className="col-md-8">
-      {/* UPDATE THIS COMPONENT CALL HERE: */}
-      <AvatarCanvas isSpeaking={isSpeaking} />
-    </div>
-  </div>
+                  {/* Right Column: 3D Avatar Area */}
+                  <div className="col-md-8">
+                    <AvatarCanvas isSpeaking={isSpeaking} />
+                  </div>
                 </div>
-
               </div>
 
             </div>
@@ -191,6 +247,7 @@ function SignToText() {
 
         </div>
       </div>
+    </div>
   );
 }
 

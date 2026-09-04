@@ -25,7 +25,7 @@ function Intro() {
                 Indian Sign Language (ISL) is a vital medium of communication for millions of individuals in India. However, the lack of widespread ISL literacy creates a significant communication gap in everyday life.
                 </p>
                 <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
-                <strong>Mitra AI</strong> is a cutting-edge, accessibility-first toolkit that bridges this gap by translating spoken English into responsive 3D Indian Sign Language in real-time. It empowers users to communicate effectively, fostering inclusivity and understanding across diverse communities.
+                <strong>Mitra AI</strong> is a cutting-edge, accessibility-first toolkit designed to bridge communication gaps through two-way Indian Sign Language interaction. It translates written or spoken language into responsive 3D Sign Language in real time, while also recognizing Sign Language gestures and converting them into text and speech. By enabling seamless communication between signers and non-signers, Mitra AI empowers users to communicate effectively and fosters greater inclusivity and understanding.
                 </p>
                 <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
 

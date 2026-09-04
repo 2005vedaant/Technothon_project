@@ -70,7 +70,7 @@ function Services() {
                             </div>
                             <h3 className="h4 fw-bold text-white mb-3">Audio to Sign</h3>
                             <p className="card-text text-muted flex-grow-1" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
-                                Real-time translation of spoken audio or English text into Indian Sign Language using our responsive 3D avatars.
+                                Real-time translation of spoken audio or English text into Sign Language using our responsive 3D avatars.
                             </p>
                             <Link to='/convert' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
                                 Try Translation
@@ -104,7 +104,7 @@ function Services() {
                             </div>
                             <h3 className="h4 fw-bold text-white mb-3">Sign to Text</h3>
                             <p className="card-text text-muted flex-grow-1" style={{ fontSize: '1rem', lineHeight: 1.6 }}>
-                                AI-powered real-time translation of Indian Sign Language gestures captured from your camera into readable text.
+                                AI-powered real-time translation of Sign Language gestures captured from your camera into readable text and natural voice output.
                             </p>
                             <Link to='/sign-to-text' className="btn btn-outline-light w-100 mt-4 rounded-pill fw-bold">
                                 Try Sign to Text

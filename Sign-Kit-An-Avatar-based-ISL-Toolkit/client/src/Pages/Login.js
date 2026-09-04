@@ -46,8 +46,24 @@ const Login = () => {
   const handleGoogleLogin = async () => {
     try {
       setError('');
-      await loginWithGoogle();
-      navigate(from, { replace: true });
+      // Simulate Google login (existing implementation)
+      const googleUser = await loginWithGoogle();
+      // Dynamically import checkGoogleUser service
+      const { checkGoogleUser } = await import('../services/userService');
+      const exists = await checkGoogleUser(googleUser.email);
+      if (exists) {
+        // Existing user: set auth context and navigate to home
+        navigate('/home', { replace: true });
+      } else {
+        // New user: redirect to create account with prefilled data
+        navigate('/create-account', {
+          state: {
+            email: googleUser.email,
+            name: googleUser.name,
+            avatar: googleUser.avatar,
+          },
+        });
+      }
     } catch (err) {
       setError(err.message || 'Google login failed. Please try again.');
     }
@@ -57,8 +73,8 @@ const Login = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>Sign-Kit</h1>
-          <p className="subtitle">An Avatar-based ISL Toolkit</p>
+          <h1>Mitra AI</h1>
+          <p className="subtitle">AI-Powered Bidirectional Indian Sign Language Communication Platform</p>
         </div>
 
         {successMsg && <div className="login-success-banner">{successMsg}</div>}
@@ -123,7 +139,7 @@ const Login = () => {
         </button>
 
         <p className="signup-text">
-          New to Sign-Kit? <Link to="/signup">Create an Account</Link>
+          New to Mitra AI? <Link to="/signup">Create an Account</Link>
         </p>
       </div>
     </div>

@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { firebaseApp } from '../firebase';
 
 const AuthContext = createContext(null);
 
@@ -69,26 +71,22 @@ export function AuthProvider({ children }) {
    * 2. Replace the simulated flow below with Google Identity Services (GIS) / OAuth token exchange
    */
   const loginWithGoogle = async () => {
-    // Simulate network latency for OAuth popup / response
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
     try {
-      const googleClientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-
-      // When Google Client ID is configured, backend OAuth validation will go here
-      if (googleClientId) {
-        console.log('[AuthContext] Google OAuth Client ID detected:', googleClientId);
-      }
+      const auth = getAuth(firebaseApp);
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
 
       const googleUserData = {
-        id: 'goog_' + Math.random().toString(36).substring(2, 9),
-        username: 'GoogleUser',
-        email: 'user@gmail.com',
-        name: 'Sign-Kit Explorer',
-        avatar: null,
+        id: user.uid,
+        username: user.displayName?.split(' ')[0] ?? 'GoogleUser',
+        email: user.email,
+        name: user.displayName ?? '',
+        avatar: user.photoURL ?? null,
         provider: 'google',
-        token: 'jwt_google_oauth_' + Date.now(),
-        loggedInAt: new Date().toISOString()
+        token: await user.getIdToken(),
+        loggedInAt: new Date().toISOString(),
       };
 
       localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(googleUserData));
