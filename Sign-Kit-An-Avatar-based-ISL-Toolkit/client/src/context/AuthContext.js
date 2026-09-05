@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 import { firebaseApp } from '../firebase';
 
 const AuthContext = createContext(null);
@@ -38,72 +38,83 @@ export function AuthProvider({ children }) {
       throw new Error('Please enter your password.');
     }
 
-    // Minimum password check (e.g. at least 4 characters)
+    // Minimum password length (Firebase requires at least 6, but we keep a generic check)
     if (password.length < 4) {
       throw new Error('Invalid username or password.');
     }
 
-    // Simulate network authentication latency
-    await new Promise((resolve) => setTimeout(resolve, 600));
-
     const trimmedInput = usernameOrEmail.trim();
-    const isEmail = trimmedInput.includes('@');
-
-    const authUserData = {
-      id: 'usr_' + Math.random().toString(36).substring(2, 9),
-      username: isEmail ? trimmedInput.split('@')[0] : trimmedInput,
-      email: isEmail ? trimmedInput : `${trimmedInput.toLowerCase()}@signkit.local`,
-      name: isEmail ? trimmedInput.split('@')[0] : trimmedInput,
-      provider: 'local',
-      token: 'jwt_signkit_token_' + Date.now(),
-      loggedInAt: new Date().toISOString()
-    };
-
-    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authUserData));
-    setUser(authUserData);
-    return authUserData;
-  };
-
-  /**
-   * Log in with Google
-   * To connect Google OAuth:
-   * 1. Add REACT_APP_GOOGLE_CLIENT_ID to your .env file
-   * 2. Replace the simulated flow below with Google Identity Services (GIS) / OAuth token exchange
-   */
-  const loginWithGoogle = async () => {
+    const auth = getAuth(firebaseApp);
     try {
-      const auth = getAuth(firebaseApp);
-      const provider = new GoogleAuthProvider();
-      provider.setCustomParameters({ prompt: 'select_account' });
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
+      // Firebase signInWithEmailAndPassword expects an email
+      const userCredential = await signInWithEmailAndPassword(auth, trimmedInput, password);
+      const user = userCredential.user;
+      const token = await user.getIdToken();
 
-      const googleUserData = {
+      const authUserData = {
         id: user.uid,
-        username: user.displayName?.split(' ')[0] ?? 'GoogleUser',
+        username: user.displayName?.split(' ')[0] ?? trimmedInput.split('@')[0],
         email: user.email,
-        name: user.displayName ?? '',
-        avatar: user.photoURL ?? null,
-        provider: 'google',
-        token: await user.getIdToken(),
+        name: user.displayName ?? trimmedInput,
+        provider: 'email',
+        token,
         loggedInAt: new Date().toISOString(),
       };
-
-      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(googleUserData));
-      setUser(googleUserData);
-      return googleUserData;
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authUserData));
+      setUser(authUserData);
+      return authUserData;
     } catch (err) {
-      console.error('[AuthContext] Google login failed:', err);
-      throw new Error('Google login failed. Please try again.');
+      console.error('[AuthContext] Email login failed:', err);
+      throw err;
     }
   };
 
   /**
    * Log out and clear session
    */
-  const logout = () => {
+    const logout = async () => {
+    // Sign out from Firebase Auth if authenticated
+    try {
+      const auth = getAuth(firebaseApp);
+      await signOut(auth);
+    } catch (err) {
+      console.error('[AuthContext] Firebase signOut error:', err);
+    }
     localStorage.removeItem(AUTH_STORAGE_KEY);
     setUser(null);
+  };
+
+  // New signup function using Firebase Email/Password
+  const signup = async (email, password) => {
+    // Basic validation (assumed already done in UI)
+    if (!email || !email.trim()) {
+      throw new Error('Please enter a valid email address.');
+    }
+    if (!password || !password.trim()) {
+      throw new Error('Please enter a password.');
+    }
+    // Firebase sign-up
+    const auth = getAuth(firebaseApp);
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const token = await user.getIdToken();
+      const authUserData = {
+        id: user.uid,
+        username: user.displayName?.split(' ')[0] ?? email.split('@')[0],
+        email: user.email,
+        name: user.displayName ?? email,
+        provider: 'email',
+        token,
+        loggedInAt: new Date().toISOString(),
+      };
+      localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(authUserData));
+      setUser(authUserData);
+      return authUserData;
+    } catch (err) {
+      console.error('[AuthContext] Email signup failed:', err);
+      throw err;
+    }
   };
 
   const value = {
@@ -111,8 +122,8 @@ export function AuthProvider({ children }) {
     isAuthenticated: Boolean(user),
     loading,
     login,
-    loginWithGoogle,
-    logout
+    signup,
+    logout,
   };
 
   return (

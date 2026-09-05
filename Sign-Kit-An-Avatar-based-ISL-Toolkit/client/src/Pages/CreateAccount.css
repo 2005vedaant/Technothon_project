@@ -1,26 +1,70 @@
+/* =========================================
+   SIGNUP CONTAINER
+   ========================================= */
+
 .signup-container {
+  width: 100%;
   min-height: 100vh;
+
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  background: radial-gradient(circle at top, #1e293b 0%, #0b0f17 100%);
+
+  background: radial-gradient(
+    circle at top,
+    #1e293b 0%,
+    #0b0f17 100%
+  );
+
   padding: 2rem 1.5rem;
+
   box-sizing: border-box;
+
+  /* Enable vertical scrolling */
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  /* Firefox scrollbar */
+  scrollbar-width: auto;
+  scrollbar-color: #334155 #0b0f17;
 }
+
+
+/* =========================================
+   SIGNUP CARD
+   ========================================= */
 
 .signup-card {
   width: 100%;
   max-width: 440px;
+
   background: rgba(30, 41, 59, 0.7);
+
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+
   border: 1px solid rgba(255, 255, 255, 0.12);
+
   border-radius: 14px;
+
   padding: 2.5rem 2rem;
+
   box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+
   color: #ffffff;
+
   position: relative;
+
+  box-sizing: border-box;
+
+  /* Prevent card from shrinking */
+  flex-shrink: 0;
 }
+
+
+/* =========================================
+   ISL BADGE
+   ========================================= */
 
 .isl-badge {
   text-align: center;
@@ -30,12 +74,22 @@
 .isl-badge span {
   font-size: 0.75rem;
   font-weight: 600;
+
   color: #38bdf8;
+
   background: rgba(56, 189, 248, 0.1);
+
   border: 1px solid rgba(56, 189, 248, 0.25);
+
   padding: 0.25rem 0.75rem;
+
   border-radius: 20px;
 }
+
+
+/* =========================================
+   SIGNUP HEADER
+   ========================================= */
 
 .signup-header {
   text-align: center;
@@ -45,27 +99,49 @@
 .signup-header h1 {
   font-size: 1.6rem;
   font-weight: 700;
+
   margin: 0;
+
   color: #38bdf8;
 }
 
 .signup-header .subtitle {
   font-size: 0.85rem;
+
   color: #94a3b8;
+
   margin-top: 0.4rem;
+
   line-height: 1.4;
 }
 
+
+/* =========================================
+   SIGNUP ERROR
+   ========================================= */
+
 .signup-error {
   background: rgba(239, 68, 68, 0.15);
+
   border: 1px solid #ef4444;
+
   color: #fca5a5;
+
   padding: 0.75rem;
+
   border-radius: 6px;
+
   font-size: 0.85rem;
+
   margin-bottom: 1.25rem;
+
   text-align: center;
 }
+
+
+/* =========================================
+   FORM GROUP
+   ========================================= */
 
 .form-group {
   margin-bottom: 1.1rem;
@@ -73,61 +149,120 @@
 
 .form-group label {
   display: block;
+
   font-size: 0.825rem;
+
   margin-bottom: 0.4rem;
+
   color: #cbd5e1;
 }
 
+
+/* =========================================
+   INPUT WRAPPER
+   ========================================= */
+
 .input-wrapper {
   position: relative;
+
   display: flex;
+
   align-items: center;
 }
 
+
+/* =========================================
+   INPUT ICON
+   ========================================= */
+
 .input-icon {
   position: absolute;
+
   left: 0.75rem;
+
   font-size: 0.95rem;
+
   pointer-events: none;
 }
 
+
+/* =========================================
+   INPUT
+   ========================================= */
+
 .input-wrapper input {
   width: 100%;
+
   padding: 0.7rem 2.2rem 0.7rem 2.4rem;
+
   background: rgba(15, 23, 42, 0.6);
+
   border: 1px solid rgba(255, 255, 255, 0.15);
+
   border-radius: 6px;
+
   color: #ffffff;
+
   font-size: 0.9rem;
+
   outline: none;
+
   transition: border-color 0.2s ease;
+
+  box-sizing: border-box;
 }
 
 .input-wrapper input:focus {
   border-color: #38bdf8;
+
   box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
 }
 
+
+/* =========================================
+   PASSWORD TOGGLE
+   ========================================= */
+
 .toggle-password {
   position: absolute;
+
   right: 0.6rem;
+
   background: transparent;
+
   border: none;
+
   cursor: pointer;
+
   font-size: 0.95rem;
 }
 
+
+/* =========================================
+   SIGNUP BUTTON
+   ========================================= */
+
 .signup-btn {
   width: 100%;
+
   padding: 0.75rem;
+
   background: #0284c7;
+
   color: #ffffff;
+
   border: none;
+
   border-radius: 6px;
+
   font-weight: 600;
+
   font-size: 0.95rem;
+
   cursor: pointer;
+
   margin-top: 0.75rem;
+
   transition: background 0.2s ease;
 }
 
@@ -137,22 +272,85 @@
 
 .signup-btn:disabled {
   opacity: 0.6;
+
   cursor: not-allowed;
 }
 
+
+/* =========================================
+   SIGN IN TEXT
+   ========================================= */
+
 .signin-text {
   text-align: center;
+
   margin-top: 1.5rem;
+
   font-size: 0.85rem;
+
   color: #94a3b8;
 }
 
 .signin-text a {
   color: #38bdf8;
+
   text-decoration: none;
+
   font-weight: 500;
 }
 
 .signin-text a:hover {
   text-decoration: underline;
+}
+
+
+/* =========================================
+   SCROLLBAR
+   ========================================= */
+
+.signup-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.signup-container::-webkit-scrollbar-track {
+  background: #0b0f17;
+}
+
+.signup-container::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 10px;
+}
+
+.signup-container::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 600px) {
+  .signup-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .signup-card {
+    padding: 2rem 1.5rem;
+  }
+}
+
+
+/* =========================================
+   SMALL MOBILE
+   ========================================= */
+
+@media (max-width: 400px) {
+  .signup-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .signup-card {
+    padding: 1.5rem 1.25rem;
+  }
 }

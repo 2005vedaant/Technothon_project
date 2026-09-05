@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@splinetool/react-spline": "^2.2.6",
+    "@splinetool/runtime": "^1.1.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
@@ -12,7 +14,6 @@
     "firebase": "^10.0.0",
     "font-awesome": "^4.7.0",
     "react": "^17.0.2",
-    "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
     "react-input-slider": "^6.0.1",
     "react-router-dom": "^6.2.2",
@@ -31,7 +32,12 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "env": {
+      "browser": true,
+      "node": true,
+      "jest/globals": true
+    }
   },
   "browserslist": {
     "production": [

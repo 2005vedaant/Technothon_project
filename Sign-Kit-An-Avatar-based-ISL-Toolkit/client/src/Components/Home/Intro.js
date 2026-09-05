@@ -18,7 +18,7 @@ function Intro() {
                 <div className="d-inline-block mb-4">
                     <i className="fa fa-connectdevelop text-info" style={{ fontSize: '2.5rem', textShadow: 'var(--glow-cyan)' }}></i>
                 </div>
-                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>What is Mitra AI?</h2>
+                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>About Mitra AI</h2>
                 <div className="divider mx-auto mb-5" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} />
                 
                 <p className="normal-text mb-4 text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>

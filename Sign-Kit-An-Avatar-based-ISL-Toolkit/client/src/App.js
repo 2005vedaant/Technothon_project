@@ -70,7 +70,7 @@ function App() {
           />
 
           {/* Default Route Redirect */}
-          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </Router>

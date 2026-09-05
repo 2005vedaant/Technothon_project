@@ -34,10 +34,130 @@ body {
     overflow-x: hidden;
 }
 
-/* Base Overrides for Light Mode Bleed */
+/* Base Overrides & High Contrast Text Rules for Dark Backgrounds */
 .bg-light, .bg-white { background-color: transparent !important; }
-.text-dark { color: var(--text-main) !important; }
-.text-muted, .text-secondary { color: var(--text-muted) !important; }
+.text-dark { color: var(--text-main, #f8fafc) !important; }
+.text-muted { color: #cbd5e1 !important; }
+.text-secondary { color: #cbd5e1 !important; }
+.card-text, .card-text.text-muted { color: #cbd5e1 !important; }
+.card-body { color: var(--text-main, #f8fafc) !important; }
+.card { color: var(--text-main, #f8fafc) !important; }
+label, .label-style, .form-label { color: #cbd5e1 !important; }
+.normal-text { color: #cbd5e1 !important; font-size: 1.15rem; line-height: 1.7; font-weight: 300; }
+.form-control::placeholder, .input-style::placeholder, textarea::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
+
+/* Dropdown Options & Scoped High Contrast Rules */
+select option, .input-style option, .form-select option {
+  background-color: #0b1325 !important;
+  color: #ffffff !important;
+}
+
+/* 1. Audio to Sign (/convert) & Learn (/learn) Workspace Panels */
+.workspace-sidebar {
+  color: #f8fafc !important;
+}
+
+.workspace-sidebar h5,
+.workspace-sidebar h5.text-white {
+  color: #f8fafc !important;
+}
+
+.workspace-sidebar h6,
+.workspace-sidebar h6.text-muted,
+.workspace-sidebar label,
+.workspace-sidebar .label-style,
+.workspace-sidebar .form-label {
+  color: #e2e8f0 !important;
+}
+
+.workspace-sidebar .text-muted,
+.workspace-sidebar span.text-muted,
+.workspace-sidebar p.text-muted,
+.workspace-sidebar div.text-muted,
+.workspace-sidebar pre.text-muted,
+.workspace-sidebar button.text-muted,
+.workspace-sidebar .fst-italic,
+.workspace-sidebar span.fst-italic {
+  color: #cbd5e1 !important;
+}
+
+.workspace-sidebar select.input-style,
+.workspace-sidebar select {
+  color: #f8fafc !important;
+  background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+.workspace-sidebar textarea.input-style,
+.workspace-sidebar input.input-style {
+  color: #f8fafc !important;
+  background-color: rgba(15, 23, 42, 0.9) !important;
+}
+
+.workspace-sidebar textarea::placeholder,
+.workspace-sidebar input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+/* 2. Sign to Audio / Text (/sign-to-text) Page */
+div.min-vh-100.py-5.text-light h2,
+div.min-vh-100.py-5.text-light h3,
+div.min-vh-100.py-5.text-light h4 {
+  color: #f8fafc !important;
+}
+
+div.min-vh-100.py-5.text-light p.text-muted,
+div.min-vh-100.py-5.text-light span.text-muted,
+div.min-vh-100.py-5.text-light div.text-muted {
+  color: #cbd5e1 !important;
+}
+
+div.min-vh-100.py-5.text-light label,
+div.min-vh-100.py-5.text-light .form-label {
+  color: #e2e8f0 !important;
+}
+
+div.min-vh-100.py-5.text-light .italic,
+div.min-vh-100.py-5.text-light .fst-italic,
+div.min-vh-100.py-5.text-light .opacity-75 {
+  color: #cbd5e1 !important;
+  opacity: 1 !important;
+}
+
+div.min-vh-100.py-5.text-light .btn-outline-dark {
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* 3. Feedback (/feedback) Page */
+div.min-vh-100.d-flex.flex-column.justify-content-center p.text-muted,
+.feedback-page-wrapper p.text-muted,
+.feedback-card p.text-muted,
+.feedback-card .subtitle {
+  color: #cbd5e1 !important;
+}
+
+.feedback-card .section-label,
+div.min-vh-100.d-flex.flex-column.justify-content-center p.tracking-wider {
+  color: #e2e8f0 !important;
+}
+
+.feedback-card .rating-btn .label {
+  color: #cbd5e1 !important;
+}
+
+div.min-vh-100.d-flex.flex-column.justify-content-center textarea,
+.feedback-card textarea {
+  color: #ffffff !important;
+}
+
+div.min-vh-100.d-flex.flex-column.justify-content-center textarea::placeholder,
+.feedback-card textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+
 
 /* Ambient Lighting Background */
 .ambient-bg {

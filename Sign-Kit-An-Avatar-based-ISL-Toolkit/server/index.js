@@ -1,6 +1,7 @@
 // server/index.js
 const express = require('express');
 const multer = require('multer');
+const usersRouter = require("./routes/users");
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -11,6 +12,7 @@ app.use(express.json());
 
 // CORS for local dev
 app.use((req, res, next) => {
+  // Allow CORS for local development UI
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -19,7 +21,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+app.use("/api/users", usersRouter);
 // Speech-to-Text endpoint – proxies to local Python service (faster-whisper)
 app.post('/api/speech-to-text', upload.single('audio'), async (req, res) => {
   if (!req.file) {
@@ -133,5 +135,5 @@ app.post('/api/text-to-speech', async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

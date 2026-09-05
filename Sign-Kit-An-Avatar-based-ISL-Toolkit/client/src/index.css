@@ -8,13 +8,13 @@ html {
   --accent-teal: #0EA5E9;
   --accent-teal-hover: #0284C7;
   --accent-cyan: #06B6D4;
-  --bg-light: #F1F5F9;
-  --bg-white: #FFFFFF;
-  --text-dark: #0F172A;
-  --text-muted: #475569;
-  --text-light: #94A3B8;
+  --bg-light: #050816;
+  --bg-white: #0f172a;
+  --text-dark: #F8FAFC;
+  --text-muted: #CBD5E1;
+  --text-light: #CBD5E1;
   --text-white: #F8FAFC;
-  --border-color: #E2E8F0;
+  --border-color: rgba(255, 255, 255, 0.1);
   --success: #10B981;
   --danger: #EF4444;
   --warning: #F59E0B;
@@ -35,8 +35,8 @@ body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-light);
-  color: var(--text-dark);
+  background-color: var(--bg-deep, #050816);
+  color: var(--text-white, #F8FAFC);
   line-height: 1.5;
 }
 
