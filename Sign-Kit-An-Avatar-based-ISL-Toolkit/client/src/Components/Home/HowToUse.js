@@ -1,4 +1,5 @@
 import React from 'react';
+import { WordReveal, FadeUpText, StaggerContainer, StaggerItem } from './TextAnimator';
 
 const steps = [
   {
@@ -47,28 +48,20 @@ function HowToUse() {
 
       <div className="container py-5 position-relative z-index-1">
         {/* Section Header */}
-        <div className="text-center mb-5 fade-in-up">
+        <div className="text-center mb-5">
           <h2 className="section-heading text-white" style={{ fontSize: '2.5rem' }}>
-            How to Use Mitra AI?
+            <WordReveal text="How to Use Mitra AI?" as="span" delay={0.1} />
           </h2>
-          <div 
-            className="divider mx-auto mb-4" 
-            style={{ 
-              background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', 
-              height: '3px', 
-              width: '60px', 
-              borderRadius: '3px' 
-            }} 
-          />
-          <p className="normal-text mx-auto" style={{ maxWidth: '650px' }}>
+          <FadeUpText delay={0.25} duration={0.6} yOffset={10} className="divider mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} as="div" />
+          <FadeUpText delay={0.35} duration={0.8} yOffset={20} className="normal-text mx-auto" style={{ maxWidth: '650px' }}>
             Communicate effortlessly with Indian Sign Language using Mitra AI.
-          </p>
+          </FadeUpText>
         </div>
 
         {/* 4 Steps Row */}
-        <div className="row g-4 justify-content-center mt-2">
+        <StaggerContainer className="row g-4 justify-content-center mt-2" staggerDelay={0.12} delayChildren={0.2}>
           {steps.map((s, idx) => (
-            <div key={idx} className="col-lg-3 col-md-6 fade-in-up card-3d-wrapper" style={{ animationDelay: `${(idx + 1) * 0.1}s` }}>
+            <StaggerItem key={idx} className="col-lg-3 col-md-6 card-3d-wrapper" yOffset={35}>
               <div 
                 className="card h-100 card-background border-0 position-relative overflow-hidden p-4 d-flex flex-column"
                 style={{
@@ -119,9 +112,9 @@ function HowToUse() {
                   {s.description}
                 </p>
               </div>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </StaggerContainer>
       </div>
     </section>
   );

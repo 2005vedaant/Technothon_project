@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { WordReveal, FadeUpText, StaggerContainer, StaggerItem } from './TextAnimator';
 
-const TiltCard = ({ children, delay }) => {
+const TiltCard = ({ children }) => {
     const cardRef = useRef(null);
     const [style, setStyle] = useState({});
 
@@ -30,17 +31,20 @@ const TiltCard = ({ children, delay }) => {
     };
 
     return (
-        <div 
-            className="col-lg-4 col-md-6 fade-in-up card-3d-wrapper" 
-            style={{ animationDelay: delay }}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
-            ref={cardRef}
+        <StaggerItem 
+            className="col-lg-4 col-md-6 card-3d-wrapper" 
+            yOffset={35}
         >
-            <div className="card h-100 card-background border-0 position-relative overflow-hidden card-3d-inner" style={style}>
+            <div 
+                ref={cardRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                className="card h-100 card-background border-0 position-relative overflow-hidden card-3d-inner" 
+                style={style}
+            >
                 {children}
             </div>
-        </div>
+        </StaggerItem>
     );
 };
 
@@ -51,18 +55,20 @@ function Services() {
             <div className="position-absolute w-100 h-100" style={{ top: 0, left: 0, background: 'radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 70%)', pointerEvents: 'none' }}></div>
 
             <div className="container py-5 position-relative z-index-1">
-                <div className="text-center mb-5 fade-in-up">
-                    <h2 className="section-heading text-white" style={{ fontSize: '2.5rem' }}>Platform Features</h2>
-                    <div className="divider mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #00F0FF, #8B5CF6)', height: '3px', width: '60px', borderRadius: '3px' }} />
-                    <p className="normal-text mx-auto" style={{ maxWidth: '600px' }}>
+                <div className="text-center mb-5">
+                    <h2 className="section-heading text-white" style={{ fontSize: '2.5rem' }}>
+                        <WordReveal text="Platform Features" as="span" delay={0.1} />
+                    </h2>
+                    <FadeUpText delay={0.25} duration={0.6} yOffset={10} className="divider mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #00F0FF, #8B5CF6)', height: '3px', width: '60px', borderRadius: '3px' }} as="div" />
+                    <FadeUpText delay={0.35} duration={0.8} yOffset={20} className="normal-text mx-auto" style={{ maxWidth: '600px' }}>
                         Explore our range of intelligent tools designed to make Indian Sign Language accessible to everyone.
-                    </p>
+                    </FadeUpText>
                 </div>
 
-                <div className="row g-4 justify-content-center mt-4">
+                <StaggerContainer className="row g-4 justify-content-center mt-4" staggerDelay={0.14} delayChildren={0.2}>
                     
                     {/* Feature 1 */}
-                    <TiltCard delay="0.1s">
+                    <TiltCard>
                         <div className="position-absolute top-0 start-0 w-100 h-100 opacity-20 blur-xl" style={{ background: 'radial-gradient(circle at top right, rgba(0, 240, 255, 0.4), transparent 50%)', pointerEvents: 'none' }}></div>
                         <div className="card-body p-5 d-flex flex-column position-relative z-index-1">
                             <div className="mb-4">
@@ -79,7 +85,7 @@ function Services() {
                     </TiltCard>
 
                     {/* Feature 2 */}
-                    <TiltCard delay="0.2s">
+                    <TiltCard>
                         <div className="position-absolute top-0 start-0 w-100 h-100 opacity-20 blur-xl" style={{ background: 'radial-gradient(circle at top right, rgba(37, 99, 235, 0.4), transparent 50%)', pointerEvents: 'none' }}></div>
                         <div className="card-body p-5 d-flex flex-column position-relative z-index-1">
                             <div className="mb-4">
@@ -96,7 +102,7 @@ function Services() {
                     </TiltCard>
 
                     {/* Feature 3 */}
-                    <TiltCard delay="0.3s">
+                    <TiltCard>
                         <div className="position-absolute top-0 start-0 w-100 h-100 opacity-20 blur-xl" style={{ background: 'radial-gradient(circle at top right, rgba(37, 99, 235, 0.4), transparent 50%)', pointerEvents: 'none' }}></div>
                         <div className="card-body p-5 d-flex flex-column position-relative z-index-1">
                             <div className="mb-4">
@@ -112,7 +118,7 @@ function Services() {
                         </div>
                     </TiltCard>
 
-                </div>
+                </StaggerContainer>
             </div>
         </section>
     );

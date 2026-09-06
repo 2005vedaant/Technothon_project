@@ -1,4 +1,5 @@
 import React from "react";
+import { WordReveal, FadeUpText } from "./TextAnimator";
 
 function Intro() {
   return (
@@ -7,7 +8,7 @@ function Intro() {
       <div className="position-absolute w-100 h-100 top-0 start-0 pointer-events-none opacity-5" 
            style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 240, 255, 0.1) 2px, rgba(0, 240, 255, 0.1) 4px)' }}></div>
       
-      <div className="container py-5 position-relative z-index-1 fade-in-up">
+      <div className="container py-5 position-relative z-index-1">
         <div className="row align-items-center justify-content-center g-5">
           <div className="col-lg-8 text-center glass-panel p-5 position-relative overflow-hidden">
             
@@ -15,18 +16,24 @@ function Intro() {
             <div className="position-absolute top-50 start-50 translate-middle w-100 h-100 opacity-25" style={{ background: 'radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, transparent 70%)', filter: 'blur(40px)', zIndex: 0 }}></div>
 
             <div className="position-relative z-index-1">
-                <div className="d-inline-block mb-4">
+                <FadeUpText delay={0.05} duration={0.6} yOffset={15} className="d-inline-block mb-4" as="div">
                     <i className="fa fa-connectdevelop text-info" style={{ fontSize: '2.5rem', textShadow: 'var(--glow-cyan)' }}></i>
-                </div>
-                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>About Mitra AI</h2>
-                <div className="divider mx-auto mb-5" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} />
+                </FadeUpText>
                 
-                <p className="normal-text mb-4 text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
+                <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>
+                    <WordReveal text="About Mitra AI" as="span" delay={0.15} />
+                </h2>
+                
+                <FadeUpText delay={0.3} duration={0.6} yOffset={10} className="divider mx-auto mb-5" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} as="div" />
+                
+                <FadeUpText delay={0.4} duration={0.8} yOffset={25} className="normal-text mb-4 text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
                 Indian Sign Language (ISL) is a vital medium of communication for millions of individuals in India. However, the lack of widespread ISL literacy creates a significant communication gap in everyday life.
-                </p>
-                <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
+                </FadeUpText>
+                
+                <FadeUpText delay={0.55} duration={0.8} yOffset={25} className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
                 <strong>Mitra AI</strong> is a cutting-edge, accessibility-first toolkit designed to bridge communication gaps through two-way Indian Sign Language interaction. It translates written or spoken language into responsive 3D Sign Language in real time, while also recognizing Sign Language gestures and converting them into text and speech. By enabling seamless communication between signers and non-signers, Mitra AI empowers users to communicate effectively and fosters greater inclusivity and understanding.
-                </p>
+                </FadeUpText>
+                
                 <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
 
                 </p>
