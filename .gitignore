@@ -40,3 +40,5 @@ dataset/
 
 Sign-Kit-An-Avatar-based-ISL-Toolkit/server/firebase-service-account.json
 Sign-Kit-An-Avatar-based-ISL-Toolkit/server/.env
+.env
+**/.env
