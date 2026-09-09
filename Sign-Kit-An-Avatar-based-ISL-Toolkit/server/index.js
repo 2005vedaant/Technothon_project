@@ -2,6 +2,7 @@
 const express = require('express');
 const multer = require('multer');
 const usersRouter = require("./routes/users");
+const feedbackRouter = require("./routes/feedback");
 const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
   next();
 });
 app.use("/api/users", usersRouter);
+app.use("/api/feedback", feedbackRouter);
 // Speech-to-Text endpoint – proxies to local Python service (faster-whisper)
 app.post('/api/speech-to-text', upload.single('audio'), async (req, res) => {
   if (!req.file) {

@@ -47,11 +47,35 @@ function Masthead() {
             </FadeUpText>
           </motion.div>
           
-          <motion.h1 className="fw-bolder mb-4" style={{ y: headingY, fontSize: 'clamp(2.5rem, 5vw, 4.5rem)', lineHeight: 1.1, textShadow: '0 10px 30px rgba(0,0,0,0.5)' }}>
-            <WordReveal text="Your Digital Ally" className="text-white" as="span" delay={0.1} staggerDuration={0.08} />
-            <br />
-            <WordReveal text="At Your Fingertips." className="text-gradient" as="span" delay={0.38} staggerDuration={0.08} />
-          </motion.h1>
+          <motion.h1
+  className="fw-bolder mb-4"
+  style={{
+    y: headingY,
+    fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+    lineHeight: 1.1,
+    textShadow: '0 10px 30px rgba(0,0,0,0.5)',
+    position: 'relative',
+    zIndex: 10,
+  }}
+>
+  <WordReveal
+    text="Your Digital Ally"
+    className="text-white"
+    as="span"
+    delay={0.1}
+    staggerDuration={0.08}
+  />
+
+  <br />
+
+  <WordReveal
+    text="At Your Fingertips."
+    as="span"
+    delay={0.38}
+    staggerDuration={0.08}
+    className="text-gradient"
+  />
+</motion.h1>
           
           <motion.div style={{ y: descriptionY }}>
             <FadeUpText delay={0.65} duration={0.8} yOffset={25} className="mb-4 lead" style={{ color: '#CBD5E1', fontWeight: 500, textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>

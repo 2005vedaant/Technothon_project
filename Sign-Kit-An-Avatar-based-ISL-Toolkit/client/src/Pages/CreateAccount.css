@@ -5,6 +5,7 @@
 .signup-container {
   width: 100%;
   min-height: 100vh;
+  margin-top: -76px;
 
   display: flex;
   align-items: flex-start;
