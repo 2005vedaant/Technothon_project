@@ -101,7 +101,7 @@ const CreateAccount = () => {
       // All good – navigate to login with success message
       navigate('/login', {
         state: {
-          successMessage: 'Account created successfully! Welcome to Sign-Kit.',
+          successMessage: 'Account created successfully! Welcome to SignBridge AI',
           prefillIdentifier: formData.username || formData.email,
         },
       });
@@ -126,8 +126,8 @@ const CreateAccount = () => {
           <span role="img" aria-label="Sign Language Badge">🤟 ISL AI Powered</span>
         </div>
         <div className="signup-header">
-          <h1>Create Your Mitra AI Account</h1>
-          <p className="subtitle">Join Mitra AI and make communication more accessible.</p>
+          <h1>Create Your Account</h1>
+          <p className="subtitle">Join SignBridge AI and make communication more accessible.</p>
         </div>
         {error && <div className="signup-error">{error}</div>}
         <form onSubmit={handleSubmit} noValidate>

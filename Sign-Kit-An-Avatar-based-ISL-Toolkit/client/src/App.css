@@ -1,7 +1,6 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 80px; /* Prevents the fixed navbar from overlapping top section content */
-  background-color: var(--bg-deep);
 }
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
@@ -190,13 +189,18 @@ h1, h2, h3, .heading, .section-heading {
     letter-spacing: -0.03em;
 }
 
-.text-gradient,
-.text-gradient span {
-  display: inline-block;
-  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #8B5CF6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.text-gradient {
+    background: linear-gradient(135deg, #38bdf8 0%, #0284c7 50%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-gradient * {
+    background: inherit;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .normal-text {
@@ -424,8 +428,6 @@ h1, h2, h3, .heading, .section-heading {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
-
 
 .vedaant-char {
   display: inline-block;

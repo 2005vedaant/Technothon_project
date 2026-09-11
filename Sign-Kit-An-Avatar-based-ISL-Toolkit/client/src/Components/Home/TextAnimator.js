@@ -1,10 +1,7 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 
-/**
- * WordReveal component splits a text string into words and animates them sequentially.
- * Replays every time element enters/re-enters the viewport (once: false).
- */
+/** WordReveal component */
 export const WordReveal = ({
   text,
   children,
@@ -12,30 +9,34 @@ export const WordReveal = ({
   style = {},
   delay = 0,
   staggerDuration = 0.08,
-  as = 'div'
+  as = 'div',
+  forceVisible = false,
 }) => {
   const shouldReduceMotion = useReducedMotion();
   const content = text || children;
 
-  // Handle non-string content or reduced motion preference
+  // Non-string or reduced motion: simple fade
   if (typeof content !== 'string' || shouldReduceMotion) {
-    const Component = motion[as] || motion.div;
+    const Tag = motion[as] || motion.div;
     return (
-      <Component
+      <Tag
         className={className}
         style={style}
         initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: false, amount: 0.2 }}
-        transition={{ duration: shouldReduceMotion ? 0.01 : 0.6, delay }}
+        {...(forceVisible
+          ? { animate: { opacity: 1 }, transition: { duration: shouldReduceMotion ? 0.01 : 0.6, delay } }
+          : {
+              whileInView: { opacity: 1 },
+              viewport: { once: false, amount: 0.2 },
+              transition: { duration: shouldReduceMotion ? 0.01 : 0.6, delay },
+            })}
       >
         {content}
-      </Component>
+      </Tag>
     );
   }
 
   const words = content.split(' ');
-
   const containerVariants = {
     hidden: {},
     visible: {
@@ -45,7 +46,6 @@ export const WordReveal = ({
       },
     },
   };
-
   const wordVariants = {
     hidden: {
       opacity: 0,
@@ -58,43 +58,33 @@ export const WordReveal = ({
       filter: 'blur(0px)',
       transition: {
         duration: 0.7,
-        ease: [0.215, 0.61, 0.355, 1], // easeOutCubic curve
+        ease: [0.215, 0.61, 0.355, 1],
       },
     },
   };
-
-  const Component = motion[as] || motion.div;
-
+  const Tag = motion[as] || motion.div;
   return (
-    <Component
+    <Tag
       className={className}
       style={{ display: 'inline-block', ...style }}
       variants={containerVariants}
       initial="hidden"
-      whileInView="visible"
-      viewport={{ once: false, amount: 0.2 }}
+      {...(forceVisible ? { animate: "visible" } : { whileInView: "visible", viewport: { once: false, amount: 0.2 } })}
     >
       {words.map((word, index) => (
         <motion.span
           key={index}
           variants={wordVariants}
-          style={{
-            display: 'inline-block',
-            marginRight: '0.28em',
-            willChange: 'transform, opacity, filter',
-          }}
+          style={{ display: 'inline-block', marginRight: '0.28em', willChange: 'transform, opacity, filter' }}
         >
           {word}
         </motion.span>
       ))}
-    </Component>
+    </Tag>
   );
 };
 
-/**
- * FadeUpText component handles paragraph/description animations.
- * Replays every time element enters the viewport.
- */
+/** FadeUpText component */
 export const FadeUpText = ({
   children,
   className = '',
@@ -102,10 +92,9 @@ export const FadeUpText = ({
   delay = 0.2,
   duration = 0.85,
   yOffset = 25,
-  as = 'p'
+  as = 'p',
 }) => {
   const shouldReduceMotion = useReducedMotion();
-
   const variants = {
     hidden: {
       opacity: 0,
@@ -123,11 +112,9 @@ export const FadeUpText = ({
       },
     },
   };
-
-  const Component = motion[as] || motion.p;
-
+  const Tag = motion[as] || motion.p || motion.div;
   return (
-    <Component
+    <Tag
       className={className}
       style={style}
       initial="hidden"
@@ -136,24 +123,20 @@ export const FadeUpText = ({
       variants={variants}
     >
       {children}
-    </Component>
+    </Tag>
   );
 };
 
-/**
- * StaggerContainer component wraps card grids to trigger staggered entrance animations.
- * Replays stagger every time container enters/re-enters the viewport (once: false).
- */
+/** StaggerContainer component */
 export const StaggerContainer = ({
   children,
   className = '',
   style = {},
   staggerDelay = 0.12,
   delayChildren = 0.1,
-  as = 'div'
+  as = 'div',
 }) => {
   const shouldReduceMotion = useReducedMotion();
-
   const containerVariants = {
     hidden: {},
     visible: {
@@ -163,11 +146,9 @@ export const StaggerContainer = ({
       },
     },
   };
-
-  const Component = motion[as] || motion.div;
-
+  const Tag = motion[as] || motion.div;
   return (
-    <Component
+    <Tag
       className={className}
       style={style}
       initial="hidden"
@@ -176,14 +157,11 @@ export const StaggerContainer = ({
       variants={containerVariants}
     >
       {children}
-    </Component>
+    </Tag>
   );
 };
 
-/**
- * StaggerItem component for individual cards inside StaggerContainer.
- * Guarantees card transitions to opacity: 1, y: 0 and remains 100% visible after entrance animation.
- */
+/** StaggerItem component */
 export const StaggerItem = ({
   children,
   className = '',
@@ -193,7 +171,6 @@ export const StaggerItem = ({
   ...restProps
 }) => {
   const shouldReduceMotion = useReducedMotion();
-
   const itemVariants = {
     hidden: {
       opacity: 0,
@@ -210,17 +187,13 @@ export const StaggerItem = ({
       },
     },
   };
-
-  const Component = motion[as] || motion.div;
-
+  const Tag = motion[as] || motion.div;
   return (
-    <Component
-      className={className}
-      style={style}
-      variants={itemVariants}
-      {...restProps}
-    >
+    <Tag className={className} style={style} variants={itemVariants} {...restProps}>
       {children}
-    </Component>
+    </Tag>
   );
 };
+
+export default WordReveal;
+

@@ -18,8 +18,8 @@ const steps = [
   },
   {
     step: '03',
-    title: 'Let Mitra AI Process',
-    description: 'Mitra AI uses AI-powered speech recognition, translation, and sign-language recognition to understand your input in real time.',
+    title: 'Let the AI Process',
+    description: 'SignBridge AI uses AI-powered speech recognition, translation, and sign-language recognition to understand your input in real time.',
     icon: 'fa-cogs',
     accentColor: '#8B5CF6'
   },
@@ -50,11 +50,11 @@ function HowToUse() {
         {/* Section Header */}
         <div className="text-center mb-5">
           <h2 className="section-heading text-white" style={{ fontSize: '2.5rem' }}>
-            <WordReveal text="How to Use Mitra AI?" as="span" delay={0.1} />
+            <WordReveal text="How to Use SignBridge AI?" as="span" delay={0.1} />
           </h2>
           <FadeUpText delay={0.25} duration={0.6} yOffset={10} className="divider mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} as="div" />
           <FadeUpText delay={0.35} duration={0.8} yOffset={20} className="normal-text mx-auto" style={{ maxWidth: '650px' }}>
-            Communicate effortlessly with Indian Sign Language using Mitra AI.
+            Communicate effortlessly with Indian Sign Language using SignBridge AI.
           </FadeUpText>
         </div>
 

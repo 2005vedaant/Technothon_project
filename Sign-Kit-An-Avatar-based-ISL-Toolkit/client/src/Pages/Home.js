@@ -36,6 +36,11 @@ function Home() {
     fetchProfile();
   }, [user]);
 
+  // Ensure scroll starts at top when Home mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div>
       <section ref={scrollRef}>

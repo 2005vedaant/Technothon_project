@@ -256,7 +256,7 @@ function SignToText() {
     <div className="w-100 min-vh-100 py-5 text-light" style={{ background: 'var(--bg-deep, #050811)' }}>
       <div className="container" style={{ maxWidth: '1100px' }}>
         <div className="text-center mb-4">
-          <h2 className="fw-bold text-white mb-1">Sign to Text (AI)</h2>
+          <h2 className="fw-bold text-white mb-1">Intelligent Sign Recognition</h2>
           <p className="text-muted small">Perform sign language in front of the camera and watch real-time translation.</p>
         </div>
         <div className="d-flex justify-content-center mb-3">

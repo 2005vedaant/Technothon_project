@@ -61,7 +61,7 @@ function Feedback() {
     <div className="w-100 min-vh-100 d-flex flex-column justify-content-center align-items-center pt-5" style={{ background: 'var(--bg-deep, #050811)', color: 'var(--text-main, #f8fafc)' }}>
       <section className="container py-5 text-light" style={{ maxWidth: '850px' }}>
         <h2 className="fw-bold mb-2 text-center" style={{ color: '#ffffff' }}>Rate Your Experience</h2>
-        <p className="text-center text-muted mb-4">Your feedback helps us improve Mitra AI.</p>
+        <p className="text-center text-muted mb-4">Your feedback helps us improve SignBridge AI.</p>
         {submitted && (
           <div className="alert alert-success bg-opacity-10 text-success border-success mb-4 rounded-3 text-center">
             <i className="fa fa-check-circle me-2"></i>

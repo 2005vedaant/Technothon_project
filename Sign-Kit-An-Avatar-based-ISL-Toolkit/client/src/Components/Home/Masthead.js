@@ -74,6 +74,7 @@ function Masthead() {
     delay={0.38}
     staggerDuration={0.08}
     className="text-gradient"
+    forceVisible={true}
   />
 </motion.h1>
           

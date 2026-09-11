@@ -21,7 +21,7 @@ function Intro() {
                 </FadeUpText>
                 
                 <h2 className="section-heading mb-4 text-white" style={{ fontSize: '2.2rem' }}>
-                    <WordReveal text="About Mitra AI" as="span" delay={0.15} />
+                    <WordReveal text="About SignBridge AI" as="span" delay={0.15} />
                 </h2>
                 
                 <FadeUpText delay={0.3} duration={0.6} yOffset={10} className="divider mx-auto mb-5" style={{ background: 'linear-gradient(90deg, #00F0FF, #3B82F6)', height: '3px', width: '60px', borderRadius: '3px' }} as="div" />
@@ -31,7 +31,7 @@ function Intro() {
                 </FadeUpText>
                 
                 <FadeUpText delay={0.55} duration={0.8} yOffset={25} className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>
-                <strong>Mitra AI</strong> is a cutting-edge, accessibility-first toolkit designed to bridge communication gaps through two-way Indian Sign Language interaction. It translates written or spoken language into responsive 3D Sign Language in real time, while also recognizing Sign Language gestures and converting them into text and speech. By enabling seamless communication between signers and non-signers, Mitra AI empowers users to communicate effectively and fosters greater inclusivity and understanding.
+                <strong>SignBridge AI</strong> is a cutting-edge, accessibility-first toolkit designed to bridge communication gaps through two-way Sign Language interaction. It translates written or spoken language into responsive 3D Sign Language in real time, while also recognizing Sign Language gestures and converting them into text and speech. By enabling seamless communication between signers and non-signers, SignBridge AI empowers users to communicate effectively and fosters greater inclusivity and understanding.
                 </FadeUpText>
                 
                 <p className="normal-text text-center mx-auto" style={{ fontSize: '1.15rem', lineHeight: '1.8' }}>

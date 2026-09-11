@@ -110,6 +110,13 @@ export default function WelcomeCinematic({ username, scrollYProgress }) {
     };
   }, []);
 
+  // Dispatch resize event when container expands so useScroll re-calculates offset correctly
+  useEffect(() => {
+    if (ready) {
+      window.dispatchEvent(new Event('resize'));
+    }
+  }, [ready]);
+
   // Canvas cover drawing
   useEffect(() => {
     if (!ready || reducedMotion) return;
@@ -162,6 +169,7 @@ export default function WelcomeCinematic({ username, scrollYProgress }) {
     draw();
     return () => cancelAnimationFrame(animId);
   }, [images, ready, frameIdx, reducedMotion]);
+
 
   // Resize handling
   useEffect(() => {

@@ -51,8 +51,8 @@ const Login = () => {
       <div className="login-right">
         <div className="login-card">
           <div className="login-header">
-            <h1>Mitra AI</h1>
-            <p className="subtitle">AI-Powered Bidirectional Indian Sign Language Communication Platform</p>
+            <h1>SignBridge AI</h1>
+            <p className="subtitle">AI-Powered Bidirectional Sign Language Communication Platform</p>
           </div>
           {successMsg && <div className="login-success-banner">{successMsg}</div>}
           {error && <div className="login-error">{error}</div>}
@@ -98,7 +98,7 @@ const Login = () => {
             </button>
           </form>
           <p className="signup-text">
-            New to Mitra AI? <Link to="/signup">Create an Account</Link>
+            New to SignBridge AI? <Link to="/signup">Create an Account</Link>
           </p>
         </div>
       </div>

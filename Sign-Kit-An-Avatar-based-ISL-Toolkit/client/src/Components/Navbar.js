@@ -57,7 +57,7 @@ function Navbar() {
 <Link to="/home" className="navbar-brand d-flex align-items-center mb-0 h1 text-decoration-none">
     <img src={logo} width="32" height="32" className="d-inline-block align-top me-3 shadow-sm" alt="Logo" style={{ borderRadius: '8px' }} />
     <span style={{ fontWeight: '800', letterSpacing: '-0.5px', fontSize: '1.25rem', color: 'var(--text-main)' }}>
-      Mitra AI
+      SignBridge AI
     </span>
 </Link>
                 
@@ -69,7 +69,7 @@ function Navbar() {
                     <ul className="navbar-nav ms-auto my-2 my-lg-0 fw-semibold align-items-center gap-1">
                         {renderNavLink('/home', 'Home')}
                         {renderNavLink('/convert', 'Audio to Sign')}
-                        {renderNavLink('/sign-to-text', 'Sign to Text (AI)')}
+                        {renderNavLink('/sign-to-text', 'Sign to Text')}
                         {renderNavLink('/learn', 'Learn')}
                         {renderNavLink('/feedback', 'Feedback')}
 
