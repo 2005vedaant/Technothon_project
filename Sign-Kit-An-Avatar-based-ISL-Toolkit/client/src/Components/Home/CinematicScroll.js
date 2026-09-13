@@ -121,7 +121,7 @@ export default function CinematicScroll({ scrollYProgress }) {
           background: '#000',
         }}
       >
-        <p style={{ color: '#fff' }}>INITIALIZING MITRA AI…</p>
+        <p style={{ color: '#fff' }}>INITIALIZING SIGNBRIDGE AI…</p>
       </section>
     );
   }

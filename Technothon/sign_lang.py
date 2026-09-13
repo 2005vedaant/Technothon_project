@@ -109,57 +109,8 @@ CORS(
 # PREDICTION ENGINE (best.pt ONLY)
 # ============================================================
 
-def predict_frame(img_bgb: np.ndarray, confidence: float = CONFIDENCE_THRESHOLD) -> List[Dict[str, Any]]:
-    """Run streaming inference on a single BGR frame using the custom best.pt model.
-
-    Returns a list of prediction dicts sorted by confidence descending.
-    Each dict contains:
-        "class": class name,
-        "confidence": rounded confidence,
-        "bbox": {"x": int, "y": int, "width": int, "height": int}
-    """
-    if img_bgb is None or img_bgb.size == 0:
-        return []
-
-    predictions: List[Dict[str, Any]] = []
-    try:
-        results = model(
-            img_bgb,
-            stream=True,
-            imgsz=MODEL_IMAGE_SIZE,
-            conf=confidence,
-            device=DEVICE,
-            verbose=False,
-        )
-        for result in results:
-            boxes = result.boxes
-            if boxes is None:
-                continue
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = math.ceil(float(box.conf[0]) * 100) / 100
-                if conf < confidence:
-                    continue
-                cls_id = int(box.cls[0])
-                cls_name = class_names.get(cls_id, str(cls_id)).strip()
-                w_box = max(1, x2 - x1)
-                h_box = max(1, y2 - y1)
-                predictions.append({
-                    "class": cls_name,
-                    "confidence": conf,
-                    "bbox": {
-                        "x": max(0, x1),
-                        "y": max(0, y1),
-                        "width": w_box,
-                        "height": h_box,
-                    },
-                })
-        predictions.sort(key=lambda p: p["confidence"], reverse=True)
-        return predictions
-    except Exception as e:
-        print(f"[MODEL ERROR] best.pt inference failed: {e}")
-        return []
-    """Run streaming inference on a single BGR frame using the custom best.pt model.
+def predict_frame(img_bgr: np.ndarray, confidence: float = CONFIDENCE_THRESHOLD) -> List[Dict[str, Any]]:
+    """Run single-image inference on a BGR frame using the custom best.pt model.
 
     Returns a list of prediction dicts sorted by confidence descending.
     Each dict contains:
@@ -172,10 +123,8 @@ def predict_frame(img_bgb: np.ndarray, confidence: float = CONFIDENCE_THRESHOLD)
 
     predictions: List[Dict[str, Any]] = []
     try:
-        # Stream inference for consistency with original YOLO workflow
         results = model(
             img_bgr,
-            stream=True,
             imgsz=MODEL_IMAGE_SIZE,
             conf=confidence,
             device=DEVICE,
@@ -186,61 +135,8 @@ def predict_frame(img_bgb: np.ndarray, confidence: float = CONFIDENCE_THRESHOLD)
             if boxes is None:
                 continue
             for box in boxes:
-                # Extract bounding box coordinates
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
-                # Confidence rounding as per original implementation
                 conf = math.ceil(float(box.conf[0]) * 100) / 100
-                if conf < confidence:
-                    continue
-                cls_id = int(box.cls[0])
-                cls_name = class_names.get(cls_id, str(cls_id)).strip()
-                w_box = max(1, x2 - x1)
-                h_box = max(1, y2 - y1)
-                predictions.append({
-                    "class": cls_name,
-                    "confidence": conf,
-                    "bbox": {
-                        "x": max(0, x1),
-                        "y": max(0, y1),
-                        "width": w_box,
-                        "height": h_box,
-                    },
-                })
-        # Sort predictions by confidence descending
-        predictions.sort(key=lambda p: p["confidence"], reverse=True)
-        return predictions
-    except Exception as e:
-        print(f"[MODEL ERROR] best.pt inference failed: {e}")
-        return []
-    """Run streaming inference on a single BGR frame using the custom best.pt model.
-
-    Returns a list of prediction dicts sorted by confidence descending.
-    Each dict contains:
-        "class": class name,
-        "confidence": rounded confidence,
-        "bbox": {"x": int, "y": int, "width": int, "height": int}
-    """
-    if img_bgr is None or img_bgr.size == 0:
-        return []
-
-    predictions: List[Dict[str, Any]] = []
-    try:
-        # Stream inference for consistency with original YOLO workflow
-        results = model(
-            img_bgr,
-            stream=True,
-            imgsz=MODEL_IMAGE_SIZE,
-            conf=confidence,
-            device=DEVICE,
-            verbose=False,
-        )
-        for result in results:
-            boxes = result.boxes
-            if boxes is None:
-                continue
-            for box in boxes:
-                x1, y1, x2, y2 = map(int, box.xyxy[0])
-                conf = math.ceil(float(box.conf[0]) * 100) / 1024
                 if conf < confidence:
                     continue
                 cls_id = int(box.cls[0])
@@ -267,9 +163,11 @@ def predict_frame(img_bgb: np.ndarray, confidence: float = CONFIDENCE_THRESHOLD)
 # ASYNCHRONOUS WEBCAM INFERENCE WORKER
 # ============================================================
 
+latest_raw_frame: Optional[np.ndarray] = None
+raw_frame_lock = threading.Lock()
+
 latest_predictions: List[Dict[str, Any]] = []
 predictions_lock = threading.Lock()
-inference_in_progress = False
 
 # Temporal Stabilization Parameters
 REQUIRED_DETECTIONS = 1
@@ -280,53 +178,55 @@ candidate_word = ""
 candidate_count = 0
 empty_inference_count = 0
 
-def run_async_inference(frame_bgr: np.ndarray):
-    """Runs local best.pt inference in a background thread to keep camera feed at 30 FPS."""
-    global inference_in_progress
+def inference_worker():
+    """Permanent background worker processing the latest camera frame."""
+    global latest_predictions, candidate_word, candidate_count, empty_inference_count
 
-    if inference_in_progress:
-        return
+    while True:
+        frame_to_process = None
+        with raw_frame_lock:
+            if latest_raw_frame is not None:
+                frame_to_process = latest_raw_frame.copy()
 
-    inference_in_progress = True
+        if frame_to_process is None:
+            time.sleep(0.005)
+            continue
 
-    def _worker(img_copy: np.ndarray):
-        global inference_in_progress, latest_predictions, candidate_word, candidate_count, empty_inference_count
-        try:
-            preds = predict_frame(img_copy, confidence=CONFIDENCE_THRESHOLD)
+        print("[INFERENCE] Processing frame")
+        preds = predict_frame(frame_to_process, confidence=CONFIDENCE_THRESHOLD)
 
-            with predictions_lock:
-                latest_predictions = preds
+        with predictions_lock:
+            latest_predictions = preds if preds else []
 
-            # Temporal Stabilization based on inference cycles
-            if preds:
-                empty_inference_count = 0
-                best_pred = preds[0]
-                best_word = best_pred["class"]
-                best_conf = best_pred["confidence"]
+        print(f"[INFERENCE] Predictions: {len(preds)}")
 
-                print(f"[PREDICTION] class={best_word} confidence={best_conf:.3f}")
+        # Temporal Stabilization based on inference cycles
+        if preds:
+            empty_inference_count = 0
+            best_pred = preds[0]
+            best_word = best_pred["class"]
+            best_conf = best_pred["confidence"]
 
-                if best_word == candidate_word:
-                    candidate_count += 1
-                else:
-                    candidate_word = best_word
-                    candidate_count = 1
+            print(f"[PREDICTION] class={best_word} confidence={best_conf:.3f}")
 
-                if candidate_count >= REQUIRED_DETECTIONS:
-                    print(f"[STABLE] class={best_word} count={candidate_count}")
-                    queue_word(best_word)
-                    candidate_count = 0
+            if best_word == candidate_word:
+                candidate_count += 1
             else:
-                empty_inference_count += 1
-                if empty_inference_count >= EMPTY_RESET_THRESHOLD:
-                    candidate_word = ""
-                    candidate_count = 0
+                candidate_word = best_word
+                candidate_count = 1
 
-        finally:
-            inference_in_progress = False
+            if candidate_count >= REQUIRED_DETECTIONS:
+                print(f"[STABLE] class={best_word} count={candidate_count}")
+                queue_word(best_word)
+                candidate_count = 0
+        else:
+            print("[INFERENCE] No detections")
+            empty_inference_count += 1
+            if empty_inference_count >= EMPTY_RESET_THRESHOLD:
+                candidate_word = ""
+                candidate_count = 0
 
-    thread = threading.Thread(target=_worker, args=(frame_bgr.copy(),), daemon=True)
-    thread.start()
+        time.sleep(0.001)
 
 # ============================================================
 # WORD QUEUE & DEBOUNCE CONTROL
@@ -394,7 +294,7 @@ def initialize_camera() -> bool:
     return True
 
 def camera_loop():
-    global latest_frame
+    global latest_raw_frame, latest_frame
 
     if not initialize_camera():
         return
@@ -408,8 +308,9 @@ def camera_loop():
         # Mirror image for natural user interaction
         img = cv2.flip(img, 1)
 
-        # Trigger background local inference on latest frame
-        run_async_inference(img)
+        # Update latest raw frame for background inference worker
+        with raw_frame_lock:
+            latest_raw_frame = img
 
         # Read latest predictions for visual overlay
         with predictions_lock:
@@ -657,8 +558,14 @@ def speak():
         return jsonify({"success": False, "error": str(e)}), 500
 
 # ============================================================
-# START CAMERA WORKER THREAD
+# START WORKER THREADS
 # ============================================================
+
+inference_thread = threading.Thread(
+    target=inference_worker,
+    daemon=True
+)
+inference_thread.start()
 
 camera_thread = threading.Thread(
     target=camera_loop,

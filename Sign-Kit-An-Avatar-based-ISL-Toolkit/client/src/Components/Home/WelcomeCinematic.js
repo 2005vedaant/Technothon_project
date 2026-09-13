@@ -193,7 +193,7 @@ export default function WelcomeCinematic({ username, scrollYProgress }) {
   if (!ready) {
     return (
       <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--bg-deep)' }}>
-        <p style={{ color: '#fff', letterSpacing: '0.1em' }}>INITIALIZING MITRA AI…</p>
+        <p style={{ color: '#fff', letterSpacing: '0.1em' }}>INITIALIZING SignBridge AI…</p>
       </section>
     );
   }
