@@ -1,6 +1,7 @@
 // SignToText.js - Reengineered detection polling lifecycle
 import React, { useState, useEffect, useRef } from 'react';
 import AvatarCanvas from './AvatarCanvas.js'; // Adjust path if placed in components
+import { getPredictiveSuggestions } from '../utils/predictiveEngine';
 
 const BACKEND_URL = process.env.REACT_APP_TECHNOTHON_API || 'http://127.0.0.1:8080';
 
@@ -38,12 +39,16 @@ function SignToText() {
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [cameraStreamKey, setCameraStreamKey] = useState(0);
 
+  // Predictive Suggestions state
+  const [suggestions, setSuggestions] = useState([]);
+
   // ---- Detection lifecycle refs (single source of truth) ----
   const pollingIntervalRef = useRef(null);
   const abortControllerRef = useRef(null);
   const detectionSessionRef = useRef(0);
   const cameraEnabledRef = useRef(false);
   const inactivityTimerRef = useRef(null);
+  const suggestionJustSelectedRef = useRef(false);
 
   // Keep cameraEnabledRef in sync with state so async callbacks see latest value
   useEffect(() => {
@@ -158,21 +163,76 @@ function SignToText() {
       return;
     }
     setDetectedText((prev) => {
-      // Prevent immediate duplicate characters
-      if (prev && prev.slice(-1) === word) return prev;
-      const updated = (prev || '') + word;
-      // Reset inactivity timer (8 s)
+      if (!word) return prev;
+
+      // Prevent immediate duplicate polling of the exact same sign/word
+      if (prev && prev.endsWith(word)) return prev;
+
+      let updated = '';
+      if (suggestionJustSelectedRef.current) {
+        // Insert space before a new manual sign if a suggestion was just clicked
+        const needSpace = prev && !prev.endsWith(' ');
+        updated = needSpace ? prev + ' ' + word : (prev || '') + word;
+        suggestionJustSelectedRef.current = false;
+      } else {
+        // Append detected sign directly to current word without space
+        updated = (prev || '') + word;
+      }
+
+      // Reset inactivity timer (EXACTLY 8000 ms / 8 s)
       if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
       inactivityTimerRef.current = setTimeout(() => {
         setDetectedText((curr) => {
-          if (!curr.trim()) return curr;
+          if (!curr || !curr.trim()) return curr;
           if (curr.endsWith(' ')) return curr;
           return curr + ' ';
         });
         inactivityTimerRef.current = null;
-      }, 8000);
+      }, 5000);
+
       return updated;
     });
+  };
+
+  // ----------------------------------------------------------
+  // Predictive Word Suggestions logic & click handler
+  // ----------------------------------------------------------
+  useEffect(() => {
+    try {
+      if (!detectedText || !detectedText.trim()) {
+        setSuggestions([]);
+      } else {
+        const preds = getPredictiveSuggestions(detectedText, 4);
+        setSuggestions(preds || []);
+      }
+    } catch (err) {
+      console.error('[PredictiveEngine] Error generating suggestions:', err);
+      setSuggestions([]);
+    }
+  }, [detectedText]);
+
+  const handleSelectSuggestion = (word) => {
+    if (!word) return;
+    setDetectedText((prev) => {
+      const current = (prev || '').trimEnd();
+      if (!current) return word;
+      // Insert space IMMEDIATELY BEFORE selected suggestion, NO space after it
+      return current + ' ' + word;
+    });
+
+    // Flag that a suggestion was selected so the next manual sign starts with a space
+    suggestionJustSelectedRef.current = true;
+
+    // Reset inactivity timer (8 s) when a suggestion is clicked
+    if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current);
+    inactivityTimerRef.current = setTimeout(() => {
+      setDetectedText((curr) => {
+        if (!curr || !curr.trim()) return curr;
+        if (curr.endsWith(' ')) return curr;
+        return curr + ' ';
+      });
+      inactivityTimerRef.current = null;
+    }, 5000);
   };
 
   // ----------------------------------------------------------
@@ -230,6 +290,12 @@ function SignToText() {
   const handleClear = async () => {
     setDetectedText('');
     setTranslatedSentence('');
+    setSuggestions([]);
+    suggestionJustSelectedRef.current = false;
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current);
+      inactivityTimerRef.current = null;
+    }
     try {
       await fetch(`${BACKEND_URL}/clear`, { cache: 'no-store' });
     } catch (e) {
@@ -320,6 +386,40 @@ function SignToText() {
                   {detectedText ? <span className="fs-5 text-info">{detectedText}</span> : <span className="text-muted italic">Waiting for gestures...</span>}
                 </div>
               </div>
+
+              {suggestions && suggestions.length > 0 && detectedText && detectedText.trim() && (
+                <div className="mb-4 p-3 rounded-3" style={{ background: 'rgba(5, 8, 17, 0.7)', border: '1px solid rgba(0, 240, 255, 0.15)' }}>
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <i className="fa fa-lightbulb-o text-warning small"></i>
+                    <span className="small text-muted fw-bold text-uppercase" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Suggested Next Words</span>
+                  </div>
+                  <div className="d-flex flex-wrap gap-2">
+                    {suggestions.map((w, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => handleSelectSuggestion(w)}
+                        className="btn btn-sm px-3 py-1.5 rounded-pill text-info fw-semibold"
+                        style={{
+                          background: 'rgba(0, 240, 255, 0.1)',
+                          border: '1px solid rgba(0, 240, 255, 0.3)',
+                          transition: 'all 0.2s ease',
+                          fontSize: '0.9rem'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.background = 'rgba(0, 240, 255, 0.25)';
+                          e.currentTarget.style.borderColor = 'rgba(0, 240, 255, 0.6)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.background = 'rgba(0, 240, 255, 0.1)';
+                          e.currentTarget.style.borderColor = 'rgba(0, 240, 255, 0.3)';
+                        }}
+                      >
+                        {w}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div className="d-flex flex-column gap-3">
                 <div className="row g-3">
                   <div className="col-md-6">
